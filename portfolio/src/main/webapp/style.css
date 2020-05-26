@@ -7,3 +7,17 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+body {
+  background-color: #f1ecad;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.center_text {
+    text-align: center;
+}
