@@ -21,3 +21,10 @@ body {
 .center_text {
     text-align: center;
 }
+
+.button_center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 20px; 
+}
