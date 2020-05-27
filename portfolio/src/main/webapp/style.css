@@ -16,7 +16,7 @@ body.home {
 }
 
 body {
-  background-color: #c2c4da;
+  background-color: lightgray;
 }
 
 .center {
@@ -54,5 +54,5 @@ li a:hover:not(.active) {
 }
 
 .active {
-  background-color: #4CAF50;
+  background-color: rgb(87, 115, 190);
 }
