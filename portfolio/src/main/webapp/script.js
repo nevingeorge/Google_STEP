@@ -13,7 +13,7 @@
 // limitations under the License.
 
 function addRandomFunFact() {
-    const facts = ['I live in Katy, TX, a suburb of Houston.', 'I was born in Singapore.', 'I love classical music, and I\'m a percussionist in my school\'s orchestra.'];
+    const facts = ['\nI live in Katy, TX, a suburb of Houston.', '\nI was born in Singapore.', '\nI love classical music, and I\'m a percussionist in my school\'s orchestra.'];
 
     // randomly choose a fact
     const fact = facts[Math.floor(Math.random()*facts.length)];
