@@ -30,7 +30,7 @@ body {
     text-align: center;
 }
 
-ul {
+.navbar_ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -38,11 +38,11 @@ ul {
   background-color: #333;
 }
 
-li {
+.navbar_li {
   float: left;
 }
 
-li a {
+.navbar_a {
   display: block;
   color: white;
   text-align: center;
@@ -50,7 +50,7 @@ li a {
   text-decoration: none;
 }
 
-li a:hover:not(.active) {
+.navbar_a:hover:not(.active) {
   background-color: #111;
 }
 
@@ -72,4 +72,9 @@ li a:hover:not(.active) {
     font-size:60px;
     font-weight: 200;
     color: black;
+}
+
+img {
+	max-width:25%;
+	height:auto;
 }
