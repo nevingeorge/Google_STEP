@@ -2,7 +2,6 @@
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  white-space: nowrap;
 }
 
 #greeting-container {
@@ -77,4 +76,12 @@ body {
 img {
 	max-width:25%;
 	height:auto;
+}
+
+div.paragraph_margin {
+    margin: 15pt;
+}
+
+div.paragraph_wrap {
+    word-wrap: break-word;
 }
