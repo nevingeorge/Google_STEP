@@ -1,7 +1,8 @@
 #content {
   margin-left: auto;
   margin-right: auto;
-  width: 650px;
+  width: 100%;
+  white-space: nowrap;
 }
 
 #greeting-container {
@@ -19,7 +20,7 @@ body {
   background-color: lightgray;
 }
 
-.center {
+.center_image {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -55,4 +56,20 @@ li a:hover:not(.active) {
 
 .active {
   background-color: rgb(87, 115, 190);
+}
+
+.header_text h1{
+    margin: 9% 0 0 0;
+    text-align: center;
+    font-size:120px;
+    font-weight: 1200;
+    color: black;
+}
+
+.header_text h2{
+    margin: 0;
+    text-align: center;
+    font-size:60px;
+    font-weight: 200;
+    color: black;
 }
