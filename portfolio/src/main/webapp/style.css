@@ -8,8 +8,15 @@
   margin-top: 20px;
 }
 
+body.home {
+    background-image: url(/images/yale.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;  
+    background-size: cover;
+}
+
 body {
-  background-color: #f1ecad;
+  background-color: #c2c4da;
 }
 
 .center {
@@ -20,13 +27,6 @@ body {
 
 .center_text {
     text-align: center;
-}
-
-.button_center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 20px; 
 }
 
 ul {
@@ -55,30 +55,4 @@ li a:hover:not(.active) {
 
 .active {
   background-color: #4CAF50;
-}
-
-.row {
-  margin-top: 20px;
-  display: flex;
-}
-
-.column {
-  flex: 33.33%;
-  padding: 15px;
-}
-
-.button {
-  background-color: #4CAF50; /* Green */
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.button:hover {
-  background-color: #3e8e41;
 }
