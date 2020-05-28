@@ -1,9 +1,87 @@
 #content {
   margin-left: auto;
   margin-right: auto;
-  width: 650px;
+  width: 100%;
 }
 
 #greeting-container {
   margin-top: 20px;
+}
+
+body.home {
+    background-image: url(/images/yale.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;  
+    background-size: cover;
+}
+
+body {
+  background-color: lightgray;
+}
+
+.center_image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.center_text {
+    text-align: center;
+}
+
+.navbar_ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+.navbar_li {
+  float: left;
+}
+
+.navbar_a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.navbar_a:hover:not(.active) {
+  background-color: #111;
+}
+
+.active {
+  background-color: rgb(87, 115, 190);
+}
+
+.header_text h1{
+    margin: 9% 0 0 0;
+    text-align: center;
+    font-size:120px;
+    font-weight: 1200;
+    color: black;
+}
+
+.header_text h2{
+    margin: 0;
+    text-align: center;
+    font-size:60px;
+    font-weight: 200;
+    color: black;
+}
+
+img {
+	max-width:25%;
+	height:auto;
+}
+
+div.paragraph_margin {
+    margin: 15pt;
+}
+
+div.paragraph_wrap {
+    word-wrap: break-word;
 }
