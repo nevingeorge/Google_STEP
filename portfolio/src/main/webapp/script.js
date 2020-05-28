@@ -12,9 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// displays the greeting "Hello Nevin!"
-function getGreeting() {
-    fetch('/data').then(response => response.text()).then(greeting => {
-        document.getElementById('greeting-container').innerHTML = greeting;
+// gets the comments from the java servlet
+function getComments() {
+    fetch('/data').then(response => response.json()).then(commentsJSON => {
+        const commentsEltList = document.getElementById('comments-container');
+        commentsEltList.innerHTML = '';
+        commentsEltList.appendChild(createListElement('Comment #1: ' + commentsJSON[0]));
+        commentsEltList.appendChild(createListElement('Comment #2: ' + commentsJSON[1]));
+        commentsEltList.appendChild(createListElement('Comment #3: ' + commentsJSON[2]));
+
+        console.log('Acquired comments.');
     });
+}
+
+// creates an <li> element containing text
+function createListElement(text) {
+    const liElt = document.createElement('li');
+    liElt.innerText = text;
+    return liElt;
 }
