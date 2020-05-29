@@ -23,7 +23,7 @@ function getComments() {
             commentsEltList.appendChild(createListElement(comment));
         });
 
-        console.log('Added comments.');
+        console.log('Displayed comments.');
     });
 }
 
@@ -32,4 +32,11 @@ function createListElement(text) {
     const liElt = document.createElement('li');
     liElt.innerText = text;
     return liElt;
+}
+
+async function deleteComments() {
+    await fetch("/delete-data", {method: 'POST'});
+    console.log('Deleted comments.');
+
+    getComments();
 }

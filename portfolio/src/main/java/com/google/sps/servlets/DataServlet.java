@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// Servlet that handles comments data
+// handles comments data
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
