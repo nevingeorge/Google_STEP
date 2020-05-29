@@ -14,29 +14,36 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import java.io.IOException;
-import com.google.gson.Gson;
 import java.util.ArrayList;
+import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that handles comments data */
+// Servlet that handles comments data
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-
-    ArrayList<String> commentsHistory = new ArrayList<String>();
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String comment = request.getParameter("comment");
-        commentsHistory.add(comment);
+        Entity commentEntity = new Entity("comment");
+        commentEntity.setProperty("comment", comment);
+
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        datastore.put(commentEntity);
+
         response.sendRedirect("/contact.html");
     }
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+      ArrayList<String> commentsHistory = new ArrayList<String>();
     Gson gson = new Gson();
     String json = gson.toJson(commentsHistory);
     response.setContentType("application/json;");
