@@ -14,7 +14,8 @@
 
 // gets the comments from the java servlet
 function getComments() {
-    fetch('/data?limit=5').then(response => response.json()).then(commentsHistory => {
+    var limit = document.getElementById("limit").value;
+    fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
         const commentsEltList = document.getElementById('comments-container');
         commentsEltList.innerHTML = '';
         
