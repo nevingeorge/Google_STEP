@@ -82,9 +82,31 @@ img {
 }
 
 div.paragraph_margin {
-margin: 30pt;
+    margin: 30pt;
 }
 
 div.paragraph_wrap {
     word-wrap: break-word;
+}
+
+div.resume {
+    margin-left: auto;
+    margin-right: auto;
+    width: 600pt;
+}
+
+div.resume-row {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+div.resume-col-title {
+    float: left;
+    width: 200pt;
+}
+
+div.resume-col-description {
+    float: left;
+    width: 400pt;
 }
