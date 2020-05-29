@@ -14,14 +14,15 @@
 
 // gets the comments from the java servlet
 function getComments() {
-    fetch('/data').then(response => response.json()).then(commentsJSON => {
+    fetch('/data').then(response => response.json()).then(commentsHistory => {
         const commentsEltList = document.getElementById('comments-container');
         commentsEltList.innerHTML = '';
-        commentsEltList.appendChild(createListElement('Comment #1: ' + commentsJSON[0]));
-        commentsEltList.appendChild(createListElement('Comment #2: ' + commentsJSON[1]));
-        commentsEltList.appendChild(createListElement('Comment #3: ' + commentsJSON[2]));
+        
+        commentsHistory.forEach(comment => {
+            commentsEltList.appendChild(createListElement(comment));
+        });
 
-        console.log('Acquired comments.');
+        console.log('Added comments.');
     });
 }
 
