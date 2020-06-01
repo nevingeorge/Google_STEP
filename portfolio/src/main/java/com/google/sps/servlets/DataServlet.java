@@ -53,13 +53,13 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    int limit = getLimit(request);
+    int numComments = getNumComments(request);
     int count = 0;
 
-    // retrieve at most limit number of comments from the server
+    // retrieve at most numComments comments from the server
     ArrayList<String> commentsHistory = new ArrayList<String>();
     for(Entity entity : results.asIterable()) {
-        if(count==limit)
+        if(count==numComments)
             break;
         String comment = (String) entity.getProperty("comment");
         commentsHistory.add(comment);
@@ -72,15 +72,15 @@ public class DataServlet extends HttpServlet {
     response.getWriter().println(json);
   }
 
-  private int getLimit(HttpServletRequest request) {
-      String strLimit = request.getParameter("limit");
-      int limit;
+  private int getNumComments(HttpServletRequest request) {
+      String strNumComments = request.getParameter("numComments");
+      int numComments;
       try {
-        limit = Integer.parseInt(strLimit);
+        numComments = Integer.parseInt(strNumComments);
       } catch (NumberFormatException e) {
-        System.err.println("Could not convert to int: " + strLimit);
+        System.err.println("Could not convert to int: " + strNumComments);
         return -1;
       }
-      return limit;
+      return numComments;
   }
 }
