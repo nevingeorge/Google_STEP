@@ -14,9 +14,9 @@
 
 // gets the comments from the java servlet
 function getComments() {
-    // retrieve at most numComments comments from the server
-    var numComments = document.getElementById("numComments").value;
-    fetch('/data?numComments=' + numComments).then(response => response.json()).then(commentsHistory => {
+    // retrieve limit number of comments from the server
+    var limit = document.getElementById("limit").value;
+    fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
         const commentsEltList = document.getElementById('comments-container');
 
         var countKey = Object.keys(commentsHistory).length;
