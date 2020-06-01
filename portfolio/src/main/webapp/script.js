@@ -17,12 +17,16 @@ function getComments() {
     var limit = document.getElementById("limit").value;
     fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
         const commentsEltList = document.getElementById('comments-container');
-        commentsEltList.innerHTML = '';
-        
-        commentsHistory.forEach(comment => {
-            commentsEltList.appendChild(createListElement(comment));
-        });
-
+        var countKey = Object.keys(commentsHistory).length;
+        if(countKey==0) {
+            commentsEltList.innerHTML = 'Be the first to leave a comment!';
+        }
+        else {
+            commentsEltList.innerHTML = '';
+            commentsHistory.forEach(comment => {
+                commentsEltList.appendChild(createListElement(comment));
+            });
+        }
         console.log('Displayed comments.');
     });
 }
