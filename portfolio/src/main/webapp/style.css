@@ -110,3 +110,12 @@ div.resume-col-description {
     float: left;
     width: 400pt;
 }
+
+textarea {
+    width: 300px; 
+    height: 120px;
+}
+
+textarea::placeholder {
+  font-family: Verdana, Helvetica, sans-serif;
+}

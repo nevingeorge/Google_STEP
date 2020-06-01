@@ -14,15 +14,21 @@
 
 // gets the comments from the java servlet
 function getComments() {
+    // retrieve limit number of comments from the server
     var limit = document.getElementById("limit").value;
     fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
         const commentsEltList = document.getElementById('comments-container');
-        commentsEltList.innerHTML = '';
-        
-        commentsHistory.forEach(comment => {
-            commentsEltList.appendChild(createListElement(comment));
-        });
 
+        var numComments = Object.keys(commentsHistory).length;
+        if(numComments==0) {
+            commentsEltList.innerHTML = 'Be the first to leave a comment!';
+        }
+        else {
+            commentsEltList.innerHTML = '';
+            commentsHistory.forEach(comment => {
+                commentsEltList.appendChild(createListElement(comment));
+            });
+        }
         console.log('Displayed comments.');
     });
 }
