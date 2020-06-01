@@ -14,9 +14,11 @@
 
 // gets the comments from the java servlet
 function getComments() {
+    // retrieve limit number of comments from the server
     var limit = document.getElementById("limit").value;
     fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
         const commentsEltList = document.getElementById('comments-container');
+
         var countKey = Object.keys(commentsHistory).length;
         if(countKey==0) {
             commentsEltList.innerHTML = 'Be the first to leave a comment!';

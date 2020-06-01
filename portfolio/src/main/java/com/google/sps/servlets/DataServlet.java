@@ -56,6 +56,7 @@ public class DataServlet extends HttpServlet {
     int limit = getLimit(request);
     int count = 0;
 
+    // retrieve at most limit number of comments from the server
     ArrayList<String> commentsHistory = new ArrayList<String>();
     for(Entity entity : results.asIterable()) {
         if(count==limit)
