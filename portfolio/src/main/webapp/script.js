@@ -19,8 +19,8 @@ function getComments() {
     fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
         const commentsEltList = document.getElementById('comments-container');
 
-        var countKey = Object.keys(commentsHistory).length;
-        if(countKey==0) {
+        var numComments = Object.keys(commentsHistory).length;
+        if(numComments==0) {
             commentsEltList.innerHTML = 'Be the first to leave a comment!';
         }
         else {
