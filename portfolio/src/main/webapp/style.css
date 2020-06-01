@@ -9,14 +9,19 @@
 }
 
 body.home {
-    background-image: url(/images/yale.jpg);
+    background-image: url(/images/computer.png);
     background-repeat: no-repeat;
     background-attachment: fixed;  
     background-size: cover;
 }
 
 body {
-  background-color: lightgray;
+  background-image: url(/images/graybackground.jpg);
+  background-repeat: no-repeat;
+  background-attachment: fixed; 
+  background-size: cover;
+  margin: 0;
+  font-family: Verdana, Helvetica, sans-serif;
 }
 
 .center_image {
@@ -57,19 +62,17 @@ body {
   background-color: rgb(87, 115, 190);
 }
 
-.header_text h1{
+.header_text h1 {
     margin: 9% 0 0 0;
     text-align: center;
-    font-size:120px;
-    font-weight: 1200;
+    font-size:130px;
     color: black;
 }
 
-.header_text h2{
+.header_text h2 {
     margin: 0;
     text-align: center;
-    font-size:60px;
-    font-weight: 200;
+    font-size:50px;
     color: black;
 }
 
@@ -79,9 +82,31 @@ img {
 }
 
 div.paragraph_margin {
-    margin: 15pt;
+    margin: 30pt;
 }
 
 div.paragraph_wrap {
     word-wrap: break-word;
+}
+
+div.resume {
+    margin-left: auto;
+    margin-right: auto;
+    width: 600pt;
+}
+
+div.resume-row {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+div.resume-col-title {
+    float: left;
+    width: 200pt;
+}
+
+div.resume-col-description {
+    float: left;
+    width: 400pt;
 }
