@@ -141,3 +141,10 @@ div.comments-section {
     width:30px;
     height:30px;
 }
+
+div.nameForm {
+    margin-left: auto;
+    margin-right: auto;
+    width: 230pt;
+    padding: 25pt;
+}

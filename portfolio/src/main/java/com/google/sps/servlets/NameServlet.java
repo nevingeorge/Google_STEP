@@ -44,15 +44,7 @@ public class NameServlet extends HttpServlet {
       
         // need to set a name
         if(firstName.equals("") && lastName.equals("")) {
-            out.println("<h1>Enter your name</h1>");
-            out.println("<form method=\"POST\" action=\"/name\">");
-            out.println("<p>First name:</p>");
-            out.println("<input name=\"firstName\" value=\"" + firstName + "\" />");
-            out.println("<p>Last name:</p>");
-            out.println("<input name=\"lastName\" value=\"" + lastName + "\" />");
-            out.println("<br/>");
-            out.println("<button>Submit</button>");
-            out.println("</form>");
+            response.sendRedirect("/name.html");
         }
         else {
             response.sendRedirect("/contact.html");
