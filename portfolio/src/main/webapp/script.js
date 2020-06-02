@@ -14,13 +14,13 @@
 
 function getComments() {
     // only display the comments section if the user is logged in
-    fetch('/user-info').then(response => response.json()).then(loginStatus => {
-        console.log('Got login status.');
+    fetch('/user-info').then(response => response.json()).then(userInfo => {
+        console.log('Got user info.');
         
         const commentsSection = document.getElementById("comments-section");
         const userInfoContainer = document.getElementById('user-info-container');
 
-        if(loginStatus[0].localeCompare("logged-in") == 0) { 
+        if(userInfo[0].localeCompare("logged-in") == 0) { 
             // retrieve limit number of comments from the server
             var limit = document.getElementById("limit").value;
             fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
@@ -37,13 +37,20 @@ function getComments() {
                 }
 
                 commentsSection.style.display = "block";
-                userInfoContainer.innerHTML = '<p>Logout <a href=\"' + loginStatus[1] + '\">here</a>.</p>';
+
+                var firstName = userInfo[2];
+                var lastName = userInfo[3];
+                userInfoContainer.innerHTML = '';
+                if(firstName.localeCompare("") != 0 || lastName.localeCompare("") != 0) {
+                    userInfoContainer.innerHTML += '<h2>Hi ' + firstName + ' ' + lastName + '!</h2>';
+                }
+                userInfoContainer.innerHTML += '<p>Logout <a href=\"' + userInfo[1] + '\">here</a>.</p>';
                 console.log('User logged in - displayed comments.');
             });
         }
         else {
             commentsSection.style.display = "none";
-            userInfoContainer.innerHTML = '<p>Login <a href=\"' + loginStatus[1] + '\">here</a> to view and post comments.</p>';
+            userInfoContainer.innerHTML = '<p>Login <a href=\"' + userInfo[1] + '\">here</a> to view and post comments.</p>';
             console.log('User not logged in - did not display comments.');
         }
     });

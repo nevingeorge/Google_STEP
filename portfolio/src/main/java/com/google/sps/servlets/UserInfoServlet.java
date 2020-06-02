@@ -37,12 +37,20 @@ public class UserInfoServlet extends HttpServlet {
             loginStatus.add("logged-in");
             String logoutUrl = userService.createLogoutURL("/contact.html");
             loginStatus.add(logoutUrl);
+
+            String userId = userService.getCurrentUser().getUserId();
+            String firstName = NameServlet.getFirstName(userId);
+            String lastName = NameServlet.getLastName(userId);
+            loginStatus.add(firstName);
+            loginStatus.add(lastName);
         }
         else {
             loginStatus.add("logged-out");
             // need to set a name
             String loginUrl = userService.createLoginURL("/name");
             loginStatus.add(loginUrl);
+            loginStatus.add("");
+            loginStatus.add("");
         }
 
         Gson gson = new Gson();
