@@ -19,20 +19,20 @@ function getComments() {
         
         const commentsSection = document.getElementById("comments-section");
         const userInfoContainer = document.getElementById('user-info-container');
+
         if(loginStatus[0].localeCompare("logged-in") == 0) { 
             // retrieve limit number of comments from the server
             var limit = document.getElementById("limit").value;
             fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
                 const commentsEltList = document.getElementById('comments-container');
 
-                var numComments = Object.keys(commentsHistory).length;
-                if(numComments==0) {
+                if(Object.keys(commentsHistory).length == 0) {
                     commentsEltList.innerHTML = 'Be the first to leave a comment!';
                 }
                 else {
                     commentsEltList.innerHTML = '';
-                    commentsHistory.forEach(comment => {
-                        commentsEltList.appendChild(createListElement(comment));
+                    commentsHistory.forEach(commentInfo => {
+                        commentsEltList.appendChild(createListElement(commentInfo[1] + " " + commentInfo[2] + ": " + commentInfo[0]));
                     });
                 }
 

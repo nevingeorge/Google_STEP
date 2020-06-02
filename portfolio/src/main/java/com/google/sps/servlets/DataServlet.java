@@ -14,6 +14,8 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -36,10 +38,13 @@ public class DataServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         long timestamp = System.currentTimeMillis();
         String comment = request.getParameter("comment");
+        UserService userService = UserServiceFactory.getUserService();
+        String userId = userService.getCurrentUser().getUserId();
 
         Entity commentEntity = new Entity("comment");
         commentEntity.setProperty("comment", comment);
         commentEntity.setProperty("timestamp", timestamp);
+        commentEntity.setProperty("id", userId);
 
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(commentEntity);
@@ -57,12 +62,16 @@ public class DataServlet extends HttpServlet {
     int count = 0;
 
     // retrieve at most limit number of comments from the server
-    ArrayList<String> commentsHistory = new ArrayList<String>();
+    ArrayList<String[]> commentsHistory = new ArrayList<String[]>();
     for(Entity entity : results.asIterable()) {
         if(count==limit)
             break;
-        String comment = (String) entity.getProperty("comment");
-        commentsHistory.add(comment);
+            
+        String[] commentInfo = new String[3];
+        commentInfo[0] = (String) entity.getProperty("comment");
+        commentInfo[1] = NameServlet.getFirstName((String) entity.getProperty("id"));
+        commentInfo[2] = NameServlet.getLastName((String) entity.getProperty("id"));
+        commentsHistory.add(commentInfo);
         count++;
     }
 

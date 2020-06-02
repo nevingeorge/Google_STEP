@@ -16,12 +16,6 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
 import java.io.IOException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
@@ -41,14 +35,13 @@ public class UserInfoServlet extends HttpServlet {
         UserService userService = UserServiceFactory.getUserService();
         if (userService.isUserLoggedIn()) {
             loginStatus.add("logged-in");
-            String redirectLogOutUrl = "/contact.html";
-            String logoutUrl = userService.createLogoutURL(redirectLogOutUrl);
+            String logoutUrl = userService.createLogoutURL("/contact.html");
             loginStatus.add(logoutUrl);
         }
         else {
             loginStatus.add("logged-out");
-            String redirectLogInUrl = "/contact.html";
-            String loginUrl = userService.createLoginURL(redirectLogInUrl);
+            // need to set a name
+            String loginUrl = userService.createLoginURL("/name");
             loginStatus.add(loginUrl);
         }
 
