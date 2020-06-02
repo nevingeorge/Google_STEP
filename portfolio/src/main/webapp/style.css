@@ -123,3 +123,21 @@ textarea::placeholder {
 div.comments-section {
     display: none;
 }
+
+.logoLeft {
+    border:0px;
+    margin:0px;
+    padding:4px;
+    float:left;
+    width:30px;
+    height:30px;
+}
+
+.logoRight {
+    border:0px;
+    margin:0px;
+    padding:4px;
+    clear:both;
+    width:30px;
+    height:30px;
+}
