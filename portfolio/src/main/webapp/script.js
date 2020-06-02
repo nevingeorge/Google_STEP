@@ -13,22 +13,39 @@
 // limitations under the License.
 
 function getComments() {
-    // retrieve limit number of comments from the server
-    var limit = document.getElementById("limit").value;
-    fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
-        const commentsEltList = document.getElementById('comments-container');
+    // only display the comments section if the user is logged in
+    fetch('/user-info').then(response => response.json()).then(loginStatus => {
+        console.log('Got login status.');
+        
+        const commentsSection = document.getElementById("comments-section");
+        const userInfoContainer = document.getElementById('user-info-container');
+        if(loginStatus[0].localeCompare("logged-in") == 0) { 
+            // retrieve limit number of comments from the server
+            var limit = document.getElementById("limit").value;
+            fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
+                const commentsEltList = document.getElementById('comments-container');
 
-        var numComments = Object.keys(commentsHistory).length;
-        if(numComments==0) {
-            commentsEltList.innerHTML = 'Be the first to leave a comment!';
-        }
-        else {
-            commentsEltList.innerHTML = '';
-            commentsHistory.forEach(comment => {
-                commentsEltList.appendChild(createListElement(comment));
+                var numComments = Object.keys(commentsHistory).length;
+                if(numComments==0) {
+                    commentsEltList.innerHTML = 'Be the first to leave a comment!';
+                }
+                else {
+                    commentsEltList.innerHTML = '';
+                    commentsHistory.forEach(comment => {
+                        commentsEltList.appendChild(createListElement(comment));
+                    });
+                }
+
+                commentsSection.style.display = "block";
+                userInfoContainer.innerHTML = '<p>Logout <a href=\"' + loginStatus[1] + '\">here</a>.</p>';
+                console.log('User logged in - displayed comments.');
             });
         }
-        console.log('Displayed comments.');
+        else {
+            commentsSection.style.display = "none";
+            userInfoContainer.innerHTML = '<p>Login <a href=\"' + loginStatus[1] + '\">here</a> to view and post comments.</p>';
+            console.log('User not logged in - did not display comments.');
+        }
     });
 }
 
@@ -44,13 +61,4 @@ async function deleteComments() {
     console.log('Deleted comments.');
 
     getComments();
-}
-
-function getUserInfo() {
-    fetch('/user-info').then(response => response.text()).then(loginStatus => {
-        const userInfoContainer = document.getElementById('user-info-container');
-        userInfoContainer.innerHTML = loginStatus;
-    });
-
-    console.log('Got user info.');
 }

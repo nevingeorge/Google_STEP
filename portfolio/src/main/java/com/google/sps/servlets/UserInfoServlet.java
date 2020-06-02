@@ -41,20 +41,25 @@ public class UserInfoServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html");
+        ArrayList<String> loginStatus = new ArrayList<String>();
         
         UserService userService = UserServiceFactory.getUserService();
         if (userService.isUserLoggedIn()) {
-            response.getWriter().println("<h1>User is logged in!</h1>");
+            loginStatus.add("logged-in");
             String redirectLogOutUrl = "/contact.html";
             String logoutUrl = userService.createLogoutURL(redirectLogOutUrl);
-            response.getWriter().println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
+            loginStatus.add(logoutUrl);
         }
         else {
-            response.getWriter().println("<h1>User is not logged in.</h1>");
+            loginStatus.add("logged-out");
             String redirectLogInUrl = "/contact.html";
             String loginUrl = userService.createLoginURL(redirectLogInUrl);
-            response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+            loginStatus.add(loginUrl);
         }
+
+        Gson gson = new Gson();
+        String json = gson.toJson(loginStatus);
+        response.setContentType("application/json;");
+        response.getWriter().println(json);
     }
 }

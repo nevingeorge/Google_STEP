@@ -119,3 +119,7 @@ textarea {
 textarea::placeholder {
   font-family: Verdana, Helvetica, sans-serif;
 }
+
+div.comments-section {
+    display: none;
+}
