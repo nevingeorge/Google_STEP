@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body onload="getComments()">
+  <body onload="getComments(); getUserInfo()">
     <ul class="navbar_ul">
         <li class="navbar_li"><a class="active navbar_a" href="/index.html">Home</a></li>
         <li class="navbar_li"><a class="navbar_a" href="/about.html">About</a></li>
@@ -37,6 +37,8 @@
         <input type="number" value="7" id="limit" min="0" max="10" onchange="getComments()">
         <br>
         <button onclick="deleteComments()">Delete Comments</button>
+        <br>
+        <div id="user-info-container"></div>
     </div>
   </body>
 </html>

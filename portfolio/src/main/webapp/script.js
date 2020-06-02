@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// gets the comments from the java servlet
 function getComments() {
     // retrieve limit number of comments from the server
     var limit = document.getElementById("limit").value;
@@ -45,4 +44,13 @@ async function deleteComments() {
     console.log('Deleted comments.');
 
     getComments();
+}
+
+function getUserInfo() {
+    fetch('/user-info').then(response => response.text()).then(loginStatus => {
+        const userInfoContainer = document.getElementById('user-info-container');
+        userInfoContainer.innerHTML = loginStatus;
+    });
+
+    console.log('Got user info.');
 }
