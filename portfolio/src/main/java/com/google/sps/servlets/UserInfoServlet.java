@@ -35,11 +35,6 @@ import javax.servlet.http.HttpServletResponse;
 public class UserInfoServlet extends HttpServlet {
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        
-    }
-
-    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         ArrayList<String> loginStatus = new ArrayList<String>();
         
