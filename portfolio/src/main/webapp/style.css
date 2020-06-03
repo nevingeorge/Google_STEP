@@ -120,7 +120,7 @@ textarea::placeholder {
   font-family: Verdana, Helvetica, sans-serif;
 }
 
-div.comments-section {
+div.user-profile-container {
     display: none;
 }
 

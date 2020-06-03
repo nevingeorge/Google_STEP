@@ -52,6 +52,68 @@ function drawNextProject() {
     console.log("Drew next project graph.");
 }
 
+function getProfile() {
+    fetch('/user-info').then(response => response.json()).then(userInfo => {
+        console.log('Got user info.');
+
+        const userProfileContainer = document.getElementById("user-profile-container");
+        const loginMessageContainer = document.getElementById("login-message-container");
+
+        // only display the user profile section if the user is logged in
+        if(userInfo[0].localeCompare("logged-in") == 0) { 
+            console.log('User is logged in.');
+            userProfileContainer.style.display = "block";
+            loginMessageContainer.innerHTML = '';
+
+            getComments();
+            getUserInfo(userInfo);
+            drawNextProject();
+        }
+        else {
+            console.log('User is not logged in.');
+            userProfileContainer.style.display = "none";
+            loginMessageContainer.innerHTML = '<p>Login <a href=\"' + userInfo[1] + '\">here</a> to view and post comments and vote on what should be my next project!</p>';
+        }
+    });
+}
+
+function getComments() {
+    // retrieve limit number of comments from the server
+    var limit = document.getElementById("limit").value;
+
+    fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
+        const commentsEltList = document.getElementById('comments-container');
+
+        if(Object.keys(commentsHistory).length == 0) {
+            commentsEltList.innerHTML = 'Be the first to leave a comment!';
+        }
+        else {
+            commentsEltList.innerHTML = '';
+            commentsHistory.forEach(commentInfo => {
+                commentsEltList.appendChild(createListElement(commentInfo[1] + " " + commentInfo[2] + ": " + commentInfo[0]));
+            });
+        }
+    });
+    console.log('Got comments.');
+}
+
+function getUserInfo(userInfo) {
+    const userInfoContainer = document.getElementById('user-info-container');
+
+    var firstName = userInfo[2];
+    var lastName = userInfo[3];
+    userInfoContainer.innerHTML = '';
+    if(firstName.localeCompare("") != 0) {
+        userInfoContainer.innerHTML += '<h2>Hi ' + firstName + '!</h2>';
+    }
+    else if(lastName.localeCompare("") != 0) {
+        userInfoContainer.innerHTML += '<h2>Hi ' + lastName + '!</h2>';
+    }
+    userInfoContainer.innerHTML += '<p>Logout <a href=\"' + userInfo[1] + '\">here</a>.</p>';
+    console.log('Got user info.');
+}
+
+/*
 function getComments() {
     // only display the comments section if the user is logged in
     fetch('/user-info').then(response => response.json()).then(userInfo => {
@@ -100,6 +162,7 @@ function getComments() {
         }
     });
 }
+*/
 
 // creates an <li> element containing text
 function createListElement(text) {

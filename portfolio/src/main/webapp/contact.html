@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js"></script>
   </head>
-  <body onload="getComments()">
+  <body onload="getProfile()">
     <ul class="navbar-ul">
         <li class="navbar-li"><a class="active navbar-a" href="/index.html">Home</a></li>
         <li class="navbar-li"><a class="navbar-a" href="/about.html">About</a></li>
@@ -26,8 +26,9 @@
             <img src="/images/github.svg" alt="GitHub" class="logo-right">
         </a>
         <br><br>
-        <h2>Comments</h2>
-        <div id="comments-section" class="comments-section">
+        <div id="login-message-container"></div>
+        <div id="user-profile-container" class="user-profile-container">
+            <h2>Comments</h2>
             <div id="comments-container"></div>
             <br>
             <form action="/data" method="POST">
@@ -50,8 +51,8 @@
                 </select>
                 <input type="submit" class="button" name="submit" value="Submit">
             </form>
+            <div id="user-info-container"></div>
         </div>
-        <div id="user-info-container"></div>
     </div>
   </body>
 </html>
