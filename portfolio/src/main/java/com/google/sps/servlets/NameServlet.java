@@ -78,14 +78,18 @@ public class NameServlet extends HttpServlet {
     response.sendRedirect("/contact.html");
   }
 
+  public static Entity getUserInfoEntity(String id) {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        Query query = new Query("UserInfo").setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
+        PreparedQuery results = datastore.prepare(query);
+        return results.asSingleEntity();
+  }
+
   // returns the first name of the user with id, or empty String if the user has not set a nickname.
   public static String getFirstName(String id) {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query = new Query("UserInfo").setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
-    PreparedQuery results = datastore.prepare(query);
-    Entity entity = results.asSingleEntity();
+    Entity entity = getUserInfoEntity(id);
     if (entity == null) {
-      return "";
+        return "";
     }
     String firstName = (String) entity.getProperty("firstName");
     return firstName;
@@ -93,10 +97,7 @@ public class NameServlet extends HttpServlet {
 
   // returns the last name of the user with id, or empty String if the user has not set a nickname.
   public static String getLastName(String id) {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query = new Query("UserInfo").setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
-    PreparedQuery results = datastore.prepare(query);
-    Entity entity = results.asSingleEntity();
+    Entity entity = getUserInfoEntity(id);
     if (entity == null) {
       return "";
     }
