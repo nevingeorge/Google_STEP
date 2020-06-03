@@ -12,26 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-google.charts.load('current', {'packages':['corechart']});
+google.charts.load("current", {packages:["timeline"]});
 google.charts.setOnLoadCallback(drawChart);
 
 function drawChart() {
     const data = new google.visualization.DataTable();
-    data.addColumn('string','Item');
-    data.addColumn('number','Amount');
+
+    data.addColumn({type: 'string', id: 'Location'});
+    data.addColumn({type: 'date', id: 'Start'});
+    data.addColumn({type: 'date', id: 'End'});
     data.addRows([
-        ['shoes', 143],
-        ['shirts', 256],
-        ['pants', 75],
-        ['socks', 47]
-    ]);
-    const options = {
-        'title': 'Inventory',
-        'width': 500,
-        'height':400
-    };
-    const chart = new google.visualization.PieChart(document.getElementById('test-chart'));
-    chart.draw(data, options);
+      ['Singapore', new Date(2000, 9), new Date(2000, 10)],
+      ['Katy, TX', new Date(2000, 10), new Date(2019, 7)],
+      ['New Haven, CT', new Date(2019,7), new Date()]]);
+
+    const chart = new google.visualization.Timeline(document.getElementById('location-timeline'));
+    chart.draw(data);
+
+    console.log("Drew timeline.");
 }
 
 function getComments() {

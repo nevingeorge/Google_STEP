@@ -182,3 +182,14 @@ button:hover {
 .button:hover {
   background-color: rgb(70, 70, 70);
 }
+
+div.timeline {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+.gallery-text {
+    text-align: center;
+    margin-top: 100px;
+}
