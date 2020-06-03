@@ -13,7 +13,6 @@
 // limitations under the License.
 
 google.charts.load("current", {'packages':["timeline", "corechart"]});
-google.charts.setOnLoadCallback(drawTimeline);
 
 function drawTimeline() {
     const data = new google.visualization.DataTable();
