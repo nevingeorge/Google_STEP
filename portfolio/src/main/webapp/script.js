@@ -12,6 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(drawChart);
+
+function drawChart() {
+    const data = new google.visualization.DataTable();
+    data.addColumn('string','Item');
+    data.addColumn('number','Amount');
+    data.addRows([
+        ['shoes', 143],
+        ['shirts', 256],
+        ['pants', 75],
+        ['socks', 47]
+    ]);
+    const options = {
+        'title': 'Inventory',
+        'width': 500,
+        'height':400
+    };
+    const chart = new google.visualization.PieChart(document.getElementById('test-chart'));
+    chart.draw(data, options);
+}
+
 function getComments() {
     // only display the comments section if the user is logged in
     fetch('/user-info').then(response => response.json()).then(userInfo => {
