@@ -23,7 +23,8 @@ function drawTimeline() {
     data.addRows([
       ['Singapore', new Date(2000, 9), new Date(2000, 10)],
       ['Katy, TX', new Date(2000, 10), new Date(2019, 7)],
-      ['New Haven, CT', new Date(2019,7), new Date()]]);
+      ['New Haven, CT', new Date(2019,7), new Date()]
+    ]);
 
     const chart = new google.visualization.Timeline(document.getElementById('location-timeline'));
     chart.draw(data);
@@ -36,12 +37,14 @@ function drawNextProject() {
         const data = new google.visualization.DataTable();
         data.addColumn('string', 'Project');
         data.addColumn('number', 'Votes');
-        Object.keys(projectVotes).forEach(project => {
-            data.addRow([project, projectVotes[project]]);
-        });
+        data.addColumn({role: 'style'});
+        data.addRow([Object.keys(projectVotes)[0], projectVotes[Object.keys(projectVotes)[0]], 'rgb(50, 98, 209)']);
+        data.addRow([Object.keys(projectVotes)[1], projectVotes[Object.keys(projectVotes)[1]], 'rgb(202, 45, 45)']);
+        data.addRow([Object.keys(projectVotes)[2], projectVotes[Object.keys(projectVotes)[2]], 'rgb(236, 201, 47)']);
 
         const options = {
-            'title': 'Votes',
+            title: 'Votes',
+            legend: {position: "none"},
         };
 
         const chart = new google.visualization.ColumnChart(document.getElementById('next-project'));
