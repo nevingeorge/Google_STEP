@@ -12,24 +12,47 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// gets the comments from the java servlet
 function getComments() {
-    // retrieve limit number of comments from the server
-    var limit = document.getElementById("limit").value;
-    fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
-        const commentsEltList = document.getElementById('comments-container');
+    // only display the comments section if the user is logged in
+    fetch('/user-info').then(response => response.json()).then(userInfo => {
+        console.log('Got user info.');
+        
+        const commentsSection = document.getElementById("comments-section");
+        const userInfoContainer = document.getElementById('user-info-container');
 
-        var numComments = Object.keys(commentsHistory).length;
-        if(numComments==0) {
-            commentsEltList.innerHTML = 'Be the first to leave a comment!';
-        }
-        else {
-            commentsEltList.innerHTML = '';
-            commentsHistory.forEach(comment => {
-                commentsEltList.appendChild(createListElement(comment));
+        if(userInfo[0].localeCompare("logged-in") == 0) { 
+            // retrieve limit number of comments from the server
+            var limit = document.getElementById("limit").value;
+            fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
+                const commentsEltList = document.getElementById('comments-container');
+
+                if(Object.keys(commentsHistory).length == 0) {
+                    commentsEltList.innerHTML = 'Be the first to leave a comment!';
+                }
+                else {
+                    commentsEltList.innerHTML = '';
+                    commentsHistory.forEach(commentInfo => {
+                        commentsEltList.appendChild(createListElement(commentInfo[1] + " " + commentInfo[2] + ": " + commentInfo[0]));
+                    });
+                }
+
+                commentsSection.style.display = "block";
+
+                var firstName = userInfo[2];
+                var lastName = userInfo[3];
+                userInfoContainer.innerHTML = '';
+                if(firstName.localeCompare("") != 0 || lastName.localeCompare("") != 0) {
+                    userInfoContainer.innerHTML += '<h2>Hi ' + firstName + ' ' + lastName + '!</h2>';
+                }
+                userInfoContainer.innerHTML += '<p>Logout <a href=\"' + userInfo[1] + '\">here</a>.</p>';
+                console.log('User logged in - displayed comments.');
             });
         }
-        console.log('Displayed comments.');
+        else {
+            commentsSection.style.display = "none";
+            userInfoContainer.innerHTML = '<p>Login <a href=\"' + userInfo[1] + '\">here</a> to view and post comments.</p>';
+            console.log('User not logged in - did not display comments.');
+        }
     });
 }
 

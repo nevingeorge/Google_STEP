@@ -19,24 +19,28 @@
         <h1 class="center_text">Contact</h1>
         <p>Email: nevingeorge2000@gmail.com</p>
         <a href="https://www.linkedin.com/in/nevingeorge4/">  
-            <img src="/images/linkedIn.png" alt="linkedIn" style="border:0px;margin:0px;padding:4px;float:left;width:30px;height:30px;">
+            <img src="/images/linkedIn.png" alt="linkedIn" class="logoLeft">
         </a>
         <a href="https://github.com/nevingeorge">
-            <img src="/images/github.svg" alt="GitHub" style="border:0px;margin:0px;padding:4px;clear:both;width:30px;height:30px;">
+            <img src="/images/github.svg" alt="GitHub" class="logoRight">
         </a>
-        <br>
-        <h3>Comments</h3>
-        <div id="comments-container"></div>
-        <br>
-        <form action="/data" method="POST">
-            <textarea name="comment" placeholder="Enter your comment here"></textarea>
+        <br><br>
+        <h2>Comments</h2>
+        <div id="comments-section" class="comments-section">
+            <div id="comments-container"></div>
             <br>
-            <input type="submit" name="submit" value="Submit">
-        </form>
-        <h3>Max number of comments to display (0-10): </h3>
-        <input type="number" value="7" id="limit" min="0" max="10" onchange="getComments()">
-        <br>
-        <button onclick="deleteComments()">Delete Comments</button>
+            <form action="/data" method="POST">
+                <textarea name="comment" placeholder="Enter your comment here"></textarea>
+                <br>
+                <input type="submit" class="button" name="submit" value="Submit">
+            </form>
+            <h4>Max number of comments to display (0-10): </h4>
+            <input type="number" value="5" id="limit" min="0" max="10" onchange="getComments()">
+            <br>
+            <button onclick="deleteComments()">Delete Comments</button>
+            <br><br>
+        </div>
+        <div id="user-info-container"></div>
     </div>
   </body>
 </html>
