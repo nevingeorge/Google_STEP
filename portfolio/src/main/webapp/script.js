@@ -65,8 +65,8 @@ function getProfile() {
             loginMessageContainer.innerHTML = '';
 
             getComments();
-            getUserInfo(userInfo);
             drawNextProject();
+            getUserInfo(userInfo);
         }
         else {
             console.log('User is not logged in.');

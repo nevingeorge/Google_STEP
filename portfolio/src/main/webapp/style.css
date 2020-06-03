@@ -193,3 +193,8 @@ div.timeline {
     text-align: center;
     margin-top: 100px;
 }
+
+div.next-project {
+    width: 500px;
+    height: 300px;
+}
