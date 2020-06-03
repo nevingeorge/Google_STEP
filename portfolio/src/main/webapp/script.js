@@ -63,8 +63,11 @@ function getComments() {
                 var firstName = userInfo[2];
                 var lastName = userInfo[3];
                 userInfoContainer.innerHTML = '';
-                if(firstName.localeCompare("") != 0 || lastName.localeCompare("") != 0) {
-                    userInfoContainer.innerHTML += '<h2>Hi ' + firstName + ' ' + lastName + '!</h2>';
+                if(firstName.localeCompare("") != 0) {
+                    userInfoContainer.innerHTML += '<h2>Hi ' + firstName + '!</h2>';
+                }
+                else if(lastName.localeCompare("") != 0) {
+                    userInfoContainer.innerHTML += '<h2>Hi ' + lastName + '!</h2>';
                 }
                 userInfoContainer.innerHTML += '<p>Logout <a href=\"' + userInfo[1] + '\">here</a>.</p>';
                 console.log('User logged in - displayed comments.');
