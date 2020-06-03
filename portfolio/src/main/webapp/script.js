@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-google.charts.load("current", {packages:["timeline"]});
-google.charts.setOnLoadCallback(drawChart);
+google.charts.load("current", {'packages':["timeline", "corechart"]});
+google.charts.setOnLoadCallback(drawTimeline);
 
-function drawChart() {
+function drawTimeline() {
     const data = new google.visualization.DataTable();
 
     data.addColumn({type: 'string', id: 'Location'});
@@ -30,6 +30,26 @@ function drawChart() {
     chart.draw(data);
 
     console.log("Drew timeline.");
+}
+
+function drawNextProject() {
+    fetch('/next-project').then(response => response.json()).then(projectVotes => {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Project');
+        data.addColumn('number', 'Votes');
+        Object.keys(projectVotes).forEach(project => {
+            data.addRow([project, projectVotes[project]]);
+        });
+
+        const options = {
+            'title': 'Votes',
+        };
+
+        const chart = new google.visualization.ColumnChart(document.getElementById('next-project'));
+        chart.draw(data, options);
+    });
+
+    console.log("Drew next project graph.");
 }
 
 function getComments() {
@@ -70,6 +90,8 @@ function getComments() {
                 userInfoContainer.innerHTML += '<p>Logout <a href=\"' + userInfo[1] + '\">here</a>.</p>';
                 console.log('User logged in - displayed comments.');
             });
+
+            drawNextProject();
         }
         else {
             commentsSection.style.display = "none";
