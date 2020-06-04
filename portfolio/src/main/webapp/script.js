@@ -38,9 +38,9 @@ function drawNextProject() {
         data.addColumn('string', 'Project');
         data.addColumn('number', 'Votes');
         data.addColumn({role: 'style'});
-        data.addRow([Object.keys(projectVotes)[0], projectVotes[Object.keys(projectVotes)[0]], 'rgb(50, 98, 209)']);
-        data.addRow([Object.keys(projectVotes)[1], projectVotes[Object.keys(projectVotes)[1]], 'rgb(202, 45, 45)']);
-        data.addRow([Object.keys(projectVotes)[2], projectVotes[Object.keys(projectVotes)[2]], 'rgb(236, 201, 47)']);
+        data.addRow(["Website", projectVotes[0], 'rgb(50, 98, 209)']);
+        data.addRow(["iOS App", projectVotes[1], 'rgb(202, 45, 45)']);
+        data.addRow(["Machine Learning", projectVotes[2], 'rgb(236, 201, 47)']);
 
         const options = {
             title: 'Votes',
