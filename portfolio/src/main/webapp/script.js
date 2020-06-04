@@ -87,8 +87,8 @@ function getProfile() {
 
                 getComments();
                 drawNextProject();
-                getVotingForm(userInfo);
-                getUserInfo(firstName, lastName);
+                getVotingForm(userInfo[4]);
+                getUserInfo(userInfo);
             }
         }
         else {
