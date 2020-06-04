@@ -73,12 +73,7 @@ public class NameServlet extends HttpServlet {
     entity.setProperty("id", id);
     entity.setProperty("firstName", firstName);
     entity.setProperty("lastName", lastName);
-
-    /*
-     * 0 - user has an account and has not previously voted
-     * 1 - user either doesn't have an account or has already voted
-     */
-    entity.setProperty("voted", "0");
+    entity.setProperty("voted", "canVote");
 
     datastore.put(entity);
 
@@ -116,7 +111,7 @@ public class NameServlet extends HttpServlet {
   public static String getHasVoted(String id) {
     Entity entity = getUserInfoEntity(id);
     if (entity == null) {
-      return "1";
+      return "cannotVote";
     }
     String hasVoted = (String) entity.getProperty("voted");
     return hasVoted;

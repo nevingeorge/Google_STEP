@@ -55,7 +55,7 @@ function drawNextProject() {
 }
 
 function getVotingForm(hasVoted) {
-    if(hasVoted.localeCompare("0") == 0) {
+    if(hasVoted.localeCompare("canVote") == 0) {
         document.getElementById("project-vote-chart").style.display = "block";
         console.log('Displayed voting form.');
     }

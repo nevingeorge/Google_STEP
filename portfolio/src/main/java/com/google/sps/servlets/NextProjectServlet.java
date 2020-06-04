@@ -69,7 +69,7 @@ public class NextProjectServlet extends HttpServlet {
     entity.setProperty("id", id);
     entity.setProperty("firstName", firstName);
     entity.setProperty("lastName", lastName);
-    entity.setProperty("voted", "1");
+    entity.setProperty("voted", "cannotVote");
     datastore.put(entity);
 
     response.sendRedirect("/contact.html");

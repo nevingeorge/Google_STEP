@@ -53,7 +53,7 @@ public class UserInfoServlet extends HttpServlet {
             loginStatus.add(loginUrl);
             loginStatus.add("");
             loginStatus.add("");
-            loginStatus.add("1");
+            loginStatus.add("cannotVote");
         }
 
         Gson gson = new Gson();
