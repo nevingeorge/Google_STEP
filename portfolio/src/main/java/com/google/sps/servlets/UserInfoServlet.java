@@ -41,8 +41,10 @@ public class UserInfoServlet extends HttpServlet {
             String userId = userService.getCurrentUser().getUserId();
             String firstName = NameServlet.getFirstName(userId);
             String lastName = NameServlet.getLastName(userId);
+            String hasVoted = NameServlet.getHasVoted(userId);
             loginStatus.add(firstName);
             loginStatus.add(lastName);
+            loginStatus.add(hasVoted);
         }
         else {
             loginStatus.add("logged-out");
@@ -51,6 +53,7 @@ public class UserInfoServlet extends HttpServlet {
             loginStatus.add(loginUrl);
             loginStatus.add("");
             loginStatus.add("");
+            loginStatus.add("1");
         }
 
         Gson gson = new Gson();

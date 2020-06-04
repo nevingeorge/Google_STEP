@@ -19,6 +19,8 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,7 +31,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 
 @WebServlet("/next-project")
 public class NextProjectServlet extends HttpServlet {
@@ -57,6 +58,19 @@ public class NextProjectServlet extends HttpServlet {
     Entity newEntity = new Entity("ProjectVotes", project);
     newEntity.setProperty("votes", currentVotes+1);
     datastore.put(newEntity);
+
+    // update the user info to indicate that the user has voted and cannot vote anymore
+    UserService userService = UserServiceFactory.getUserService();
+    String id = userService.getCurrentUser().getUserId();
+    String firstName = NameServlet.getFirstName(id);
+    String lastName = NameServlet.getLastName(id);
+
+    Entity entity = new Entity("UserInfo", id);
+    entity.setProperty("id", id);
+    entity.setProperty("firstName", firstName);
+    entity.setProperty("lastName", lastName);
+    entity.setProperty("voted", "1");
+    datastore.put(entity);
 
     response.sendRedirect("/contact.html");
   }

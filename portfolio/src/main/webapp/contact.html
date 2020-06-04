@@ -43,14 +43,16 @@
             <br><br>
             <h2>Vote on my next project!</h2>
             <div id="next-project" class="next-project"></div>
-            <form action="/next-project" method="POST">
-                <select name="project">
-                    <option value="Website">Website</option>
-                    <option value="iOS App">iOS App</option>
-                    <option value="Machine Learning">Machine Learning</option>
-                </select>
-                <input type="submit" class="button" name="submit" value="Submit">
-            </form>
+            <div id="project-vote-chart">
+                <form action="/next-project" method="POST">
+                    <select name="project">
+                        <option value="Website">Website</option>
+                        <option value="iOS App">iOS App</option>
+                        <option value="Machine Learning">Machine Learning</option>
+                    </select>
+                    <input type="submit" class="button" name="submit" value="Submit">
+                </form>
+            </div>
             <div id="user-info-container"></div>
         </div>
     </div>

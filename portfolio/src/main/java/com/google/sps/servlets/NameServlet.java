@@ -73,6 +73,13 @@ public class NameServlet extends HttpServlet {
     entity.setProperty("id", id);
     entity.setProperty("firstName", firstName);
     entity.setProperty("lastName", lastName);
+
+    /*
+     * 0 - user has an account and has not previously voted
+     * 1 - user either doesn't have an account or has already voted
+     */
+    entity.setProperty("voted", "0");
+
     datastore.put(entity);
 
     response.sendRedirect("/contact.html");
@@ -103,5 +110,15 @@ public class NameServlet extends HttpServlet {
     }
     String lastName = (String) entity.getProperty("lastName");
     return lastName;
+  }
+
+  // returns whether a user has voted
+  public static String getHasVoted(String id) {
+    Entity entity = getUserInfoEntity(id);
+    if (entity == null) {
+      return "1";
+    }
+    String hasVoted = (String) entity.getProperty("voted");
+    return hasVoted;
   }
 }

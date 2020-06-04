@@ -54,6 +54,17 @@ function drawNextProject() {
     console.log("Drew next project graph.");
 }
 
+function getVotingForm(hasVoted) {
+    if(hasVoted.localeCompare("0") == 0) {
+        document.getElementById("project-vote-chart").style.display = "block";
+        console.log('Displayed voting form.');
+    }
+    else {
+        document.getElementById("project-vote-chart").style.display = "none";
+        console.log('Hid voting form.');
+    }
+}
+
 function getProfile() {
     fetch('/user-info').then(response => response.json()).then(userInfo => {
         const userProfileContainer = document.getElementById("user-profile-container");
@@ -67,6 +78,7 @@ function getProfile() {
 
             getComments();
             drawNextProject();
+            getVotingForm(userInfo[4]);
             getUserInfo(userInfo);
         }
         else {
