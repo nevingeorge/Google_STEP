@@ -56,8 +56,6 @@ function drawNextProject() {
 
 function getProfile() {
     fetch('/user-info').then(response => response.json()).then(userInfo => {
-        console.log('Got user info.');
-
         const userProfileContainer = document.getElementById("user-profile-container");
         const loginMessageContainer = document.getElementById("login-message-container");
 
