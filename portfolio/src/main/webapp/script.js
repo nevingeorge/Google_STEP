@@ -73,13 +73,23 @@ function getProfile() {
         // only display the user profile section if the user is logged in
         if(userInfo[0].localeCompare("logged-in") == 0) { 
             console.log('User is logged in.');
-            userProfileContainer.style.display = "block";
-            loginMessageContainer.innerHTML = '';
 
-            getComments();
-            drawNextProject();
-            getVotingForm(userInfo[4]);
-            getUserInfo(userInfo);
+            var firstName = userInfo[2];
+            var lastName = userInfo[3];
+            if(firstName.localeCompare("") == 0 && lastName.localeCompare("") == 0) {
+                console.log('User is logged in but has not set a name - do not display page.');
+                userProfileContainer.style.display = "none";
+                loginMessageContainer.innerHTML = '<p>Set a name <a href=/name.html>here</a> to access profile information.</p>';
+            }
+            else {
+                userProfileContainer.style.display = "block";
+                loginMessageContainer.innerHTML = '';
+
+                getComments();
+                drawNextProject();
+                getVotingForm(userInfo);
+                getUserInfo(firstName, lastName);
+            }
         }
         else {
             console.log('User is not logged in.');
@@ -111,10 +121,10 @@ function getComments() {
 
 function getUserInfo(userInfo) {
     const userInfoContainer = document.getElementById('user-info-container');
+    userInfoContainer.innerHTML = '';
 
     var firstName = userInfo[2];
     var lastName = userInfo[3];
-    userInfoContainer.innerHTML = '';
     if(firstName.localeCompare("") != 0) {
         userInfoContainer.innerHTML += '<h2>Hi ' + firstName + '!</h2>';
     }
