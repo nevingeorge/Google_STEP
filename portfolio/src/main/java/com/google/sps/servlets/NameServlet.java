@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/name")
 public class NameServlet extends HttpServlet {
 
+  // directs users who need to set a name to name.html, which contains a name input form
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html");

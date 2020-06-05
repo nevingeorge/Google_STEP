@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+// handles the next project chart in contact.html
 @WebServlet("/next-project")
 public class NextProjectServlet extends HttpServlet {
 
