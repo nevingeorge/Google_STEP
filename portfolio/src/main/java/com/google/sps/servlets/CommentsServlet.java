@@ -50,10 +50,10 @@ public class CommentsServlet extends HttpServlet {
             DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
             datastore.put(commentEntity);
 
-            response.sendRedirect("/contact.html");
+            response.sendRedirect("/forum.html");
         }
         else {
-            response.sendRedirect("/contact.html");
+            response.sendRedirect("/forum.html");
         }
     }
 

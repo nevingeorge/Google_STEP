@@ -45,11 +45,11 @@ public class NameServlet extends HttpServlet {
             response.sendRedirect("/name.html");
         }
         else {
-            response.sendRedirect("/contact.html");
+            response.sendRedirect("/forum.html");
         }
     } 
     else {
-        response.sendRedirect("/contact.html");
+        response.sendRedirect("/forum.html");
     }
   }
 
@@ -69,7 +69,7 @@ public class NameServlet extends HttpServlet {
         userEntity.setProperty("canVote", true);
         datastore.put(userEntity);
 
-        response.sendRedirect("/contact.html");
+        response.sendRedirect("/forum.html");
     }
     else {
         response.sendRedirect("/name");

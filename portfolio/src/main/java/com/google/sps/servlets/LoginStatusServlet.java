@@ -32,7 +32,7 @@ public class LoginStatusServlet extends HttpServlet {
         UserService userService = UserServiceFactory.getUserService();
         if(userService.isUserLoggedIn()) {
             loginStatus.add(true);
-            loginStatus.add(userService.createLogoutURL("/contact.html"));
+            loginStatus.add(userService.createLogoutURL("/forum.html"));
         }
         else {
             loginStatus.add(false);

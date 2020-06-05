@@ -43,7 +43,7 @@ public class UserInfoServlet extends HttpServlet {
             response.getWriter().println(json);
         }
         else {
-            response.sendRedirect("/contact.html");
+            response.sendRedirect("/forum.html");
         }
     }
 
