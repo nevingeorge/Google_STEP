@@ -24,17 +24,17 @@ body {
   font-family: Verdana, Helvetica, sans-serif;
 }
 
-.center_image {
+.center-image {
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
-.center_text {
+.center-text {
     text-align: center;
 }
 
-.navbar_ul {
+.navbar-ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -42,11 +42,11 @@ body {
   background-color: #333;
 }
 
-.navbar_li {
+.navbar-li {
   float: left;
 }
 
-.navbar_a {
+.navbar-a {
   display: block;
   color: white;
   text-align: center;
@@ -54,7 +54,7 @@ body {
   text-decoration: none;
 }
 
-.navbar_a:hover:not(.active) {
+.navbar-a:hover:not(.active) {
   background-color: #111;
 }
 
@@ -62,14 +62,14 @@ body {
   background-color: rgb(87, 115, 190);
 }
 
-.header_text h1 {
+.header-text h1 {
     margin: 9% 0 0 0;
     text-align: center;
     font-size:130px;
     color: black;
 }
 
-.header_text h2 {
+.header-text h2 {
     margin: 0;
     text-align: center;
     font-size:50px;
@@ -81,11 +81,11 @@ img {
 	height:auto;
 }
 
-div.paragraph_margin {
+div.paragraph-margin {
     margin: 30pt;
 }
 
-div.paragraph_wrap {
+div.paragraph-wrap {
     word-wrap: break-word;
 }
 
@@ -120,11 +120,11 @@ textarea::placeholder {
   font-family: Verdana, Helvetica, sans-serif;
 }
 
-div.comments-section {
+div.user-profile-container {
     display: none;
 }
 
-.logoLeft {
+.logo-left {
     border:0px;
     margin:0px;
     padding:4px;
@@ -133,7 +133,7 @@ div.comments-section {
     height:30px;
 }
 
-.logoRight {
+.logo-right {
     border:0px;
     margin:0px;
     padding:4px;
@@ -142,7 +142,7 @@ div.comments-section {
     height:30px;
 }
 
-div.nameForm {
+div.name-form {
     margin-left: auto;
     margin-right: auto;
     width: 230pt;
@@ -181,4 +181,20 @@ button:hover {
 
 .button:hover {
   background-color: rgb(70, 70, 70);
+}
+
+div.timeline {
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+}
+
+.gallery-text {
+    text-align: center;
+    margin-top: 100px;
+}
+
+div.next-project-container {
+    width: 500px;
+    height: 300px;
 }

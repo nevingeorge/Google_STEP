@@ -12,48 +12,113 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-function getComments() {
-    // only display the comments section if the user is logged in
-    fetch('/user-info').then(response => response.json()).then(userInfo => {
-        console.log('Got user info.');
-        
-        const commentsSection = document.getElementById("comments-section");
-        const userInfoContainer = document.getElementById('user-info-container');
+google.charts.load("current", {'packages':["timeline", "corechart"]});
 
-        if(userInfo[0].localeCompare("logged-in") == 0) { 
-            // retrieve limit number of comments from the server
-            var limit = document.getElementById("limit").value;
-            fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
-                const commentsEltList = document.getElementById('comments-container');
-
-                if(Object.keys(commentsHistory).length == 0) {
-                    commentsEltList.innerHTML = 'Be the first to leave a comment!';
-                }
-                else {
-                    commentsEltList.innerHTML = '';
-                    commentsHistory.forEach(commentInfo => {
-                        commentsEltList.appendChild(createListElement(commentInfo[1] + " " + commentInfo[2] + ": " + commentInfo[0]));
-                    });
-                }
-
-                commentsSection.style.display = "block";
-
-                var firstName = userInfo[2];
-                var lastName = userInfo[3];
-                userInfoContainer.innerHTML = '';
-                if(firstName.localeCompare("") != 0 || lastName.localeCompare("") != 0) {
-                    userInfoContainer.innerHTML += '<h2>Hi ' + firstName + ' ' + lastName + '!</h2>';
-                }
-                userInfoContainer.innerHTML += '<p>Logout <a href=\"' + userInfo[1] + '\">here</a>.</p>';
-                console.log('User logged in - displayed comments.');
-            });
+function getLoginStatus() {
+    fetch('/login-status').then(response => response.json()).then(loginStatus => {
+        const loginMessageContainer = document.getElementById("login-message-container");
+        if(loginStatus[0]) {
+            console.log('User is logged in.');
+            loginMessageContainer.innerHTML = '<p>Logout <a href=\"' + loginStatus[1] + '\">here</a>.</p>';
+            getProfile();
         }
         else {
-            commentsSection.style.display = "none";
-            userInfoContainer.innerHTML = '<p>Login <a href=\"' + userInfo[1] + '\">here</a> to view and post comments.</p>';
-            console.log('User not logged in - did not display comments.');
+            console.log('User is not logged in.');
+            loginMessageContainer.innerHTML = '<p>Login <a href=\"' + loginStatus[1] + '\">here</a> to view and post comments and vote on what should be my next project!</p>';
         }
     });
+}
+
+function getProfile() {
+    fetch('/user-info').then(response => response.json()).then(userInfo => {
+        const userProfileContainer = document.getElementById("user-profile-container");
+
+        // user must have set a name to access profile
+        if(userInfo.firstName.localeCompare("") == 0 && userInfo.lastName.localeCompare("") == 0) {
+            userProfileContainer.style.display = "none";
+            document.getElementById("login-message-container").innerHTML = '<p>Set a name <a href=/name.html>here</a> to access profile information.</p>';
+            console.log('User is logged in but has not set a name - did not display user profile.');
+        }
+        else {
+            userProfileContainer.style.display = "block";
+
+            getComments();
+            drawNextProject();
+            getVotingForm(userInfo.canVote);
+            getUserInfo(userInfo);
+            console.log('Displayed the user profile.');
+        }
+    });
+}
+
+function getComments() {
+    // retrieve limit number of comments from the server
+    var limit = document.getElementById("limit").value;
+
+    fetch('/comments?limit=' + limit).then(response => response.json()).then(commentsHistory => {
+        const commentsEltList = document.getElementById('comments-container');
+
+        if(Object.keys(commentsHistory).length == 0) {
+            commentsEltList.innerHTML = 'Be the first to leave a comment!';
+        }
+        else {
+            commentsEltList.innerHTML = '';
+            commentsHistory.forEach(commentInfo => {
+                commentsEltList.appendChild(createListElement(commentInfo[1] + " " + commentInfo[2] + ": " + commentInfo[0]));
+            });
+        }
+    });
+    console.log('Got comments.');
+}
+
+function drawNextProject() {
+    fetch('/next-project').then(response => response.json()).then(projectVotes => {
+        const data = new google.visualization.DataTable();
+        data.addColumn('string', 'Project');
+        data.addColumn('number', 'Votes');
+        data.addColumn({role: 'style'});
+        data.addRow(["Website", projectVotes[0], 'rgb(50, 98, 209)']);
+        data.addRow(["iOS App", projectVotes[1], 'rgb(202, 45, 45)']);
+        data.addRow(["Machine Learning", projectVotes[2], 'rgb(236, 201, 47)']);
+
+        const options = {
+            title: 'Votes',
+            legend: {position: "none"},
+        };
+
+        const chart = new google.visualization.ColumnChart(document.getElementById('next-project-container'));
+        chart.draw(data, options);
+    });
+
+    console.log("Drew next project graph.");
+}
+
+function getVotingForm(canVote) {
+    if(canVote) {
+        document.getElementById("vote-container").style.display = "block";
+        console.log('Displayed voting form.');
+    }
+    else {
+        document.getElementById("vote-container").style.display = "none";
+        console.log('Hid voting form.');
+    }
+}
+
+function getUserInfo(userInfo) {
+    const userInfoContainer = document.getElementById('user-info-container');
+    userInfoContainer.innerHTML = '';
+
+    if(!userInfo.canVote) {
+        userInfoContainer.innerHTML += '<h4>Thanks for voting!</h4>';
+    }
+
+    if(userInfo.firstName.localeCompare("") != 0) {
+        userInfoContainer.innerHTML += '<h2>Hi ' + userInfo.firstName + '!</h2>';
+    }
+    else if(userInfo.lastName.localeCompare("") != 0) {
+        userInfoContainer.innerHTML += '<h2>Hi ' + userInfo.lastName + '!</h2>';
+    }
+    console.log('Got user info.');
 }
 
 // creates an <li> element containing text
@@ -68,4 +133,22 @@ async function deleteComments() {
     console.log('Deleted comments.');
 
     getComments();
+}
+
+function drawTimeline() {
+    const data = new google.visualization.DataTable();
+
+    data.addColumn({type: 'string', id: 'Location'});
+    data.addColumn({type: 'date', id: 'Start'});
+    data.addColumn({type: 'date', id: 'End'});
+    data.addRows([
+      ['Singapore', new Date(2000, 9), new Date(2000, 10)],
+      ['Katy, TX', new Date(2000, 10), new Date(2019, 7)],
+      ['New Haven, CT', new Date(2019,7), new Date()]
+    ]);
+
+    const chart = new google.visualization.Timeline(document.getElementById('location-timeline'));
+    chart.draw(data);
+
+    console.log("Drew timeline.");
 }

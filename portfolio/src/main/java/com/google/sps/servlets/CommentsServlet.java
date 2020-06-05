@@ -22,6 +22,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
@@ -30,26 +31,31 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// handles comments data
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+// handles comments
+@WebServlet("/comments")
+public class CommentsServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        long timestamp = System.currentTimeMillis();
-        String comment = request.getParameter("comment");
         UserService userService = UserServiceFactory.getUserService();
-        String userId = userService.getCurrentUser().getUserId();
+        if(userService.isUserLoggedIn()) {
+            long timestamp = System.currentTimeMillis();
+            String comment = request.getParameter("comment");
+            String userId = userService.getCurrentUser().getUserId();
 
-        Entity commentEntity = new Entity("comment");
-        commentEntity.setProperty("comment", comment);
-        commentEntity.setProperty("timestamp", timestamp);
-        commentEntity.setProperty("id", userId);
+            Entity commentEntity = new Entity("comment");
+            commentEntity.setProperty("comment", comment);
+            commentEntity.setProperty("timestamp", timestamp);
+            commentEntity.setProperty("id", userId);
 
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        datastore.put(commentEntity);
+            DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+            datastore.put(commentEntity);
 
-        response.sendRedirect("/contact.html");
+            response.sendRedirect("/contact.html");
+        }
+        else {
+            response.sendRedirect("/contact.html");
+        }
     }
 
   @Override
@@ -69,8 +75,10 @@ public class DataServlet extends HttpServlet {
             
         String[] commentInfo = new String[3];
         commentInfo[0] = (String) entity.getProperty("comment");
-        commentInfo[1] = NameServlet.getFirstName((String) entity.getProperty("id"));
-        commentInfo[2] = NameServlet.getLastName((String) entity.getProperty("id"));
+
+        Entity userEntity = UserInfoServlet.getUserEntity((String) entity.getProperty("id"));
+        commentInfo[1] = (String) userEntity.getProperty("firstName");
+        commentInfo[2] = (String) userEntity.getProperty("lastName");
         commentsHistory.add(commentInfo);
         count++;
     }
