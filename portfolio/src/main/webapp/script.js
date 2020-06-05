@@ -14,22 +14,61 @@
 
 google.charts.load("current", {'packages':["timeline", "corechart"]});
 
-function drawTimeline() {
-    const data = new google.visualization.DataTable();
+function getLoginStatus() {
+    fetch('/login-status').then(response => response.json()).then(loginStatus => {
+        const loginMessageContainer = document.getElementById("login-message-container");
+        if(loginStatus[0]) {
+            console.log('User is logged in.');
+            loginMessageContainer.innerHTML = '<p>Logout <a href=\"' + loginStatus[1] + '\">here</a>.</p>';
+            getProfile();
+        }
+        else {
+            console.log('User is not logged in.');
+            loginMessageContainer.innerHTML = '<p>Login <a href=\"' + loginStatus[1] + '\">here</a> to view and post comments and vote on what should be my next project!</p>';
+        }
+    });
+}
 
-    data.addColumn({type: 'string', id: 'Location'});
-    data.addColumn({type: 'date', id: 'Start'});
-    data.addColumn({type: 'date', id: 'End'});
-    data.addRows([
-      ['Singapore', new Date(2000, 9), new Date(2000, 10)],
-      ['Katy, TX', new Date(2000, 10), new Date(2019, 7)],
-      ['New Haven, CT', new Date(2019,7), new Date()]
-    ]);
+function getProfile() {
+    fetch('/user-info').then(response => response.json()).then(userInfo => {
+        const userProfileContainer = document.getElementById("user-profile-container");
 
-    const chart = new google.visualization.Timeline(document.getElementById('location-timeline'));
-    chart.draw(data);
+        // user must have set a name to access profile
+        if(userInfo.firstName.localeCompare("") == 0 && userInfo.lastName.localeCompare("") == 0) {
+            userProfileContainer.style.display = "none";
+            document.getElementById("login-message-container").innerHTML = '<p>Set a name <a href=/name.html>here</a> to access profile information.</p>';
+            console.log('User is logged in but has not set a name - did not display user profile.');
+        }
+        else {
+            userProfileContainer.style.display = "block";
 
-    console.log("Drew timeline.");
+            getComments();
+            drawNextProject();
+            getVotingForm(userInfo.canVote);
+            getUserInfo(userInfo);
+            console.log('Displayed the user profile.');
+        }
+    });
+}
+
+function getComments() {
+    // retrieve limit number of comments from the server
+    var limit = document.getElementById("limit").value;
+
+    fetch('/comments?limit=' + limit).then(response => response.json()).then(commentsHistory => {
+        const commentsEltList = document.getElementById('comments-container');
+
+        if(Object.keys(commentsHistory).length == 0) {
+            commentsEltList.innerHTML = 'Be the first to leave a comment!';
+        }
+        else {
+            commentsEltList.innerHTML = '';
+            commentsHistory.forEach(commentInfo => {
+                commentsEltList.appendChild(createListElement(commentInfo[1] + " " + commentInfo[2] + ": " + commentInfo[0]));
+            });
+        }
+    });
+    console.log('Got comments.');
 }
 
 function drawNextProject() {
@@ -47,91 +86,38 @@ function drawNextProject() {
             legend: {position: "none"},
         };
 
-        const chart = new google.visualization.ColumnChart(document.getElementById('next-project'));
+        const chart = new google.visualization.ColumnChart(document.getElementById('next-project-container'));
         chart.draw(data, options);
     });
 
     console.log("Drew next project graph.");
 }
 
-function getVotingForm(hasVoted) {
-    if(hasVoted.localeCompare("canVote") == 0) {
-        document.getElementById("project-vote-chart").style.display = "block";
+function getVotingForm(canVote) {
+    if(canVote) {
+        document.getElementById("vote-container").style.display = "block";
         console.log('Displayed voting form.');
     }
     else {
-        document.getElementById("project-vote-chart").style.display = "none";
+        document.getElementById("vote-container").style.display = "none";
         console.log('Hid voting form.');
     }
-}
-
-function getProfile() {
-    fetch('/user-info').then(response => response.json()).then(userInfo => {
-        const userProfileContainer = document.getElementById("user-profile-container");
-        const loginMessageContainer = document.getElementById("login-message-container");
-
-        // only display the user profile section if the user is logged in
-        if(userInfo[0].localeCompare("logged-in") == 0) { 
-            console.log('User is logged in.');
-
-            var firstName = userInfo[2];
-            var lastName = userInfo[3];
-            if(firstName.localeCompare("") == 0 && lastName.localeCompare("") == 0) {
-                console.log('User is logged in but has not set a name - do not display page.');
-                userProfileContainer.style.display = "none";
-                loginMessageContainer.innerHTML = '<p>Set a name <a href=/name.html>here</a> to access profile information.</p>';
-            }
-            else {
-                userProfileContainer.style.display = "block";
-                loginMessageContainer.innerHTML = '';
-
-                getComments();
-                drawNextProject();
-                getVotingForm(userInfo[4]);
-                getUserInfo(userInfo);
-            }
-        }
-        else {
-            console.log('User is not logged in.');
-            userProfileContainer.style.display = "none";
-            loginMessageContainer.innerHTML = '<p>Login <a href=\"' + userInfo[1] + '\">here</a> to view and post comments and vote on what should be my next project!</p>';
-        }
-    });
-}
-
-function getComments() {
-    // retrieve limit number of comments from the server
-    var limit = document.getElementById("limit").value;
-
-    fetch('/data?limit=' + limit).then(response => response.json()).then(commentsHistory => {
-        const commentsEltList = document.getElementById('comments-container');
-
-        if(Object.keys(commentsHistory).length == 0) {
-            commentsEltList.innerHTML = 'Be the first to leave a comment!';
-        }
-        else {
-            commentsEltList.innerHTML = '';
-            commentsHistory.forEach(commentInfo => {
-                commentsEltList.appendChild(createListElement(commentInfo[1] + " " + commentInfo[2] + ": " + commentInfo[0]));
-            });
-        }
-    });
-    console.log('Got comments.');
 }
 
 function getUserInfo(userInfo) {
     const userInfoContainer = document.getElementById('user-info-container');
     userInfoContainer.innerHTML = '';
 
-    var firstName = userInfo[2];
-    var lastName = userInfo[3];
-    if(firstName.localeCompare("") != 0) {
-        userInfoContainer.innerHTML += '<h2>Hi ' + firstName + '!</h2>';
+    if(!userInfo.canVote) {
+        userInfoContainer.innerHTML += '<h4>Thanks for voting!</h4>';
     }
-    else if(lastName.localeCompare("") != 0) {
-        userInfoContainer.innerHTML += '<h2>Hi ' + lastName + '!</h2>';
+
+    if(userInfo.firstName.localeCompare("") != 0) {
+        userInfoContainer.innerHTML += '<h2>Hi ' + userInfo.firstName + '!</h2>';
     }
-    userInfoContainer.innerHTML += '<p>Logout <a href=\"' + userInfo[1] + '\">here</a>.</p>';
+    else if(userInfo.lastName.localeCompare("") != 0) {
+        userInfoContainer.innerHTML += '<h2>Hi ' + userInfo.lastName + '!</h2>';
+    }
     console.log('Got user info.');
 }
 
@@ -147,4 +133,22 @@ async function deleteComments() {
     console.log('Deleted comments.');
 
     getComments();
+}
+
+function drawTimeline() {
+    const data = new google.visualization.DataTable();
+
+    data.addColumn({type: 'string', id: 'Location'});
+    data.addColumn({type: 'date', id: 'Start'});
+    data.addColumn({type: 'date', id: 'End'});
+    data.addRows([
+      ['Singapore', new Date(2000, 9), new Date(2000, 10)],
+      ['Katy, TX', new Date(2000, 10), new Date(2019, 7)],
+      ['New Haven, CT', new Date(2019,7), new Date()]
+    ]);
+
+    const chart = new google.visualization.Timeline(document.getElementById('location-timeline'));
+    chart.draw(data);
+
+    console.log("Drew timeline.");
 }

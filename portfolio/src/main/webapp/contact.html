@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js"></script>
   </head>
-  <body onload="getProfile()">
+  <body onload="getLoginStatus()">
     <ul class="navbar-ul">
         <li class="navbar-li"><a class="active navbar-a" href="/index.html">Home</a></li>
         <li class="navbar-li"><a class="navbar-a" href="/about.html">About</a></li>
@@ -26,7 +26,6 @@
             <img src="/images/github.svg" alt="GitHub" class="logo-right">
         </a>
         <br><br>
-        <div id="login-message-container"></div>
         <div id="user-profile-container" class="user-profile-container">
             <h2>Comments</h2>
             <div id="comments-container"></div>
@@ -42,8 +41,8 @@
             <button onclick="deleteComments()">Delete Comments</button>
             <br><br>
             <h2>Vote on my next project!</h2>
-            <div id="next-project" class="next-project"></div>
-            <div id="project-vote-chart">
+            <div id="next-project-container" class="next-project-container"></div>
+            <div id="vote-container">
                 <form action="/next-project" method="POST">
                     <select name="project">
                         <option value="Website">Website</option>
@@ -56,6 +55,7 @@
             <br>
             <div id="user-info-container"></div>
         </div>
+        <div id="login-message-container"></div>
     </div>
   </body>
 </html>

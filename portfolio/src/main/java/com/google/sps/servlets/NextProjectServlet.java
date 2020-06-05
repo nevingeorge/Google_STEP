@@ -51,27 +51,27 @@ public class NextProjectServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String project = request.getParameter("project");
-    int currentVotes = getProjectVotes(project);
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Entity newEntity = new Entity("ProjectVotes", project);
-    newEntity.setProperty("votes", currentVotes+1);
-    datastore.put(newEntity);
-
-    // update the user info to indicate that the user has voted and cannot vote anymore
     UserService userService = UserServiceFactory.getUserService();
-    String id = userService.getCurrentUser().getUserId();
-    String firstName = NameServlet.getFirstName(id);
-    String lastName = NameServlet.getLastName(id);
+    if(userService.isUserLoggedIn()) {
+        String project = request.getParameter("project");
+        int currentVotes = getProjectVotes(project);
 
-    Entity entity = new Entity("UserInfo", id);
-    entity.setProperty("id", id);
-    entity.setProperty("firstName", firstName);
-    entity.setProperty("lastName", lastName);
-    entity.setProperty("voted", "cannotVote");
-    datastore.put(entity);
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        Entity newEntity = new Entity("ProjectVotes", project);
+        newEntity.setProperty("votes", currentVotes+1);
+        datastore.put(newEntity);
 
+        // update the user info to indicate that the user has voted and cannot vote anymore
+        String userId = userService.getCurrentUser().getUserId();
+        Entity userEntity = UserInfoServlet.getUserEntity(userId);
+
+        Entity newUserEntity = new Entity("UserAccount", userId);
+        newUserEntity.setProperty("id", userId);
+        newUserEntity.setProperty("firstName", (String) userEntity.getProperty("firstName"));
+        newUserEntity.setProperty("lastName", (String) userEntity.getProperty("lastName"));
+        newUserEntity.setProperty("canVote", false);
+        datastore.put(newUserEntity);
+    }
     response.sendRedirect("/contact.html");
   }
 

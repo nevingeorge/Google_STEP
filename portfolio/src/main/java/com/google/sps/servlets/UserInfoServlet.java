@@ -14,51 +14,55 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import java.util.ArrayList;
-import com.google.gson.Gson;
+import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// handles comments data
 @WebServlet("/user-info")
 public class UserInfoServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        ArrayList<String> loginStatus = new ArrayList<String>();
-        
         UserService userService = UserServiceFactory.getUserService();
-        if (userService.isUserLoggedIn()) {
-            loginStatus.add("logged-in");
-            String logoutUrl = userService.createLogoutURL("/contact.html");
-            loginStatus.add(logoutUrl);
-
-            String userId = userService.getCurrentUser().getUserId();
-            String firstName = NameServlet.getFirstName(userId);
-            String lastName = NameServlet.getLastName(userId);
-            String hasVoted = NameServlet.getHasVoted(userId);
-            loginStatus.add(firstName);
-            loginStatus.add(lastName);
-            loginStatus.add(hasVoted);
+        if(userService.isUserLoggedIn()) {
+            Entity userEntity = getUserEntity(userService.getCurrentUser().getUserId());
+            UserInfo userInfo = new UserInfo((String) userEntity.getProperty("firstName"), (String) userEntity.getProperty("lastName"), (boolean) userEntity.getProperty("canVote"));
+            String json = userInfo.getJson();
+            response.setContentType("application/json;");
+            response.getWriter().println(json);
         }
         else {
-            loginStatus.add("logged-out");
-            // need to set a name
             String loginUrl = userService.createLoginURL("/name");
-            loginStatus.add(loginUrl);
-            loginStatus.add("");
-            loginStatus.add("");
-            loginStatus.add("cannotVote");
+            PrintWriter out = response.getWriter();
+            out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
         }
+    }
 
-        Gson gson = new Gson();
-        String json = gson.toJson(loginStatus);
-        response.setContentType("application/json;");
-        response.getWriter().println(json);
+    public static Entity getUserEntity(String userId) {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        Query query = new Query("UserAccount").setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, userId));
+        PreparedQuery results = datastore.prepare(query);
+        Entity userEntity =  results.asSingleEntity();
+       
+        if(userEntity == null) {
+            userEntity = new Entity("UserAccount", userId);
+            userEntity.setProperty("id", userId);
+            userEntity.setProperty("firstName", "");
+            userEntity.setProperty("lastName", "");
+            userEntity.setProperty("canVote", false);
+            datastore.put(userEntity);
+        }
+        return userEntity;
     }
 }
