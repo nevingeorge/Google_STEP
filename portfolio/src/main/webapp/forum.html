@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js"></script>
   </head>
-  <body onload="getLoginStatus()">
+  <body onload="getLoginStatus(); getComments(); drawNextProject();">
     <ul class="navbar-ul">
         <li class="navbar-li"><a class="active navbar-a" href="/index.html">Home</a></li>
         <li class="navbar-li"><a class="navbar-a" href="/about.html">About</a></li>
@@ -19,11 +19,11 @@
     </ul>
     <div class="paragraph-margin">
         <h1 class="center-text">Forum</h1>
-        <div id="user-profile-container" class="user-profile-container">
-            <h2>Comments</h2>
-            <div id="comments-container"></div>
-            <br>
-            <form action="/data" method="POST">
+        <h2>Comments</h2>
+        <div id="comments-container"></div>
+        <br>
+        <div id="comments-form-container">
+            <form action="/comments" method="POST">
                 <textarea name="comment" placeholder="Enter your comment here"></textarea>
                 <br>
                 <input type="submit" class="button" name="submit" value="Submit">
@@ -33,21 +33,20 @@
             <br>
             <button onclick="deleteComments()">Delete Comments</button>
             <br><br>
-            <h2>Vote on my next project!</h2>
-            <div id="next-project-container" class="next-project-container"></div>
-            <div id="vote-container">
-                <form action="/next-project" method="POST">
-                    <select name="project">
-                        <option value="Website">Website</option>
-                        <option value="iOS App">iOS App</option>
-                        <option value="Machine Learning">Machine Learning</option>
-                    </select>
-                    <input type="submit" class="button" name="submit" value="Submit">
-                </form>
-            </div>
-            <br>
-            <div id="user-info-container"></div>
         </div>
+        <h2>Vote on my next project!</h2>
+        <div id="next-project-container" class="next-project-container"></div>
+        <div id="vote-container">
+            <form action="/next-project" method="POST">
+                <select name="project">
+                    <option value="Website">Website</option>
+                    <option value="iOS App">iOS App</option>
+                    <option value="Machine Learning">Machine Learning</option>
+                </select>
+                <input type="submit" class="button" name="submit" value="Submit">
+            </form>
+        </div>
+        <div id="user-info-container"></div>
         <div id="login-message-container"></div>
     </div>
   </body>
