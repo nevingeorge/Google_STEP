@@ -43,9 +43,7 @@ public class UserInfoServlet extends HttpServlet {
             response.getWriter().println(json);
         }
         else {
-            String loginUrl = userService.createLoginURL("/name");
-            PrintWriter out = response.getWriter();
-            out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+            response.sendRedirect("/contact.html");
         }
     }
 

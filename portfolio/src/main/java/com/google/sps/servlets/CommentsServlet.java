@@ -54,9 +54,7 @@ public class CommentsServlet extends HttpServlet {
             response.sendRedirect("/contact.html");
         }
         else {
-            String loginUrl = userService.createLoginURL("/name");
-            PrintWriter out = response.getWriter();
-            out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+            response.sendRedirect("/contact.html");
         }
     }
 
