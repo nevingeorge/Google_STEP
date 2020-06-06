@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/name")
 public class NameServlet extends HttpServlet {
 
+  // directs users who need to set a name to name.html, which contains a name input form
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html");
@@ -44,11 +45,11 @@ public class NameServlet extends HttpServlet {
             response.sendRedirect("/name.html");
         }
         else {
-            response.sendRedirect("/contact.html");
+            response.sendRedirect("/forum.html");
         }
     } 
     else {
-        response.sendRedirect("/contact.html");
+        response.sendRedirect("/forum.html");
     }
   }
 
@@ -68,7 +69,7 @@ public class NameServlet extends HttpServlet {
         userEntity.setProperty("canVote", true);
         datastore.put(userEntity);
 
-        response.sendRedirect("/contact.html");
+        response.sendRedirect("/forum.html");
     }
     else {
         response.sendRedirect("/name");

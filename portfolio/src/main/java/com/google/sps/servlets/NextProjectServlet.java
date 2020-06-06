@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+// handles the next project chart in forum.html
 @WebServlet("/next-project")
 public class NextProjectServlet extends HttpServlet {
 
@@ -72,7 +73,7 @@ public class NextProjectServlet extends HttpServlet {
         newUserEntity.setProperty("canVote", false);
         datastore.put(newUserEntity);
     }
-    response.sendRedirect("/contact.html");
+    response.sendRedirect("/forum.html");
   }
 
   private static int getProjectVotes(String project) {

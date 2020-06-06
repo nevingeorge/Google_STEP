@@ -19,36 +19,42 @@ function getLoginStatus() {
         const loginMessageContainer = document.getElementById("login-message-container");
         if(loginStatus[0]) {
             console.log('User is logged in.');
-            loginMessageContainer.innerHTML = '<p>Logout <a href=\"' + loginStatus[1] + '\">here</a>.</p>';
             getProfile();
+            loginMessageContainer.innerHTML = '<p>Logout <a href=\"' + loginStatus[1] + '\">here</a>.</p>';
         }
         else {
             console.log('User is not logged in.');
-            loginMessageContainer.innerHTML = '<p>Login <a href=\"' + loginStatus[1] + '\">here</a> to view and post comments and vote on what should be my next project!</p>';
+            hideProfile();
+            loginMessageContainer.innerHTML = '<br><p>Login <a href=\"' + loginStatus[1] + '\">here</a> to post comments and vote on what should be my next project!</p>';
         }
     });
 }
 
 function getProfile() {
     fetch('/user-info').then(response => response.json()).then(userInfo => {
-        const userProfileContainer = document.getElementById("user-profile-container");
-
-        // user must have set a name to access profile
+        // user must have set a name to access the profile
         if(userInfo.firstName.localeCompare("") == 0 && userInfo.lastName.localeCompare("") == 0) {
-            userProfileContainer.style.display = "none";
-            document.getElementById("login-message-container").innerHTML = '<p>Set a name <a href=/name.html>here</a> to access profile information.</p>';
+            hideProfile();   
+            document.getElementById("login-message-container").innerHTML = '<p>Set a name <a href=/name.html>here</a> to access profile information.</p>';     
             console.log('User is logged in but has not set a name - did not display user profile.');
         }
         else {
-            userProfileContainer.style.display = "block";
+            // display the profile
+            document.getElementById("comments-form-container").style.display = "block";
+            document.getElementById("user-info-container").style.display = "block";
 
-            getComments();
-            drawNextProject();
             getVotingForm(userInfo.canVote);
             getUserInfo(userInfo);
             console.log('Displayed the user profile.');
         }
     });
+}
+
+function hideProfile() {
+    document.getElementById("comments-form-container").style.display = "none";
+    document.getElementById("vote-container").style.display = "none";
+    document.getElementById("user-info-container").style.display = "none";
+    console.log('Hid the user profile.');
 }
 
 function getComments() {
@@ -111,7 +117,7 @@ function getUserInfo(userInfo) {
     if(!userInfo.canVote) {
         userInfoContainer.innerHTML += '<h4>Thanks for voting!</h4>';
     }
-
+    userInfoContainer.innerHTML += '<br>'
     if(userInfo.firstName.localeCompare("") != 0) {
         userInfoContainer.innerHTML += '<h2>Hi ' + userInfo.firstName + '!</h2>';
     }
