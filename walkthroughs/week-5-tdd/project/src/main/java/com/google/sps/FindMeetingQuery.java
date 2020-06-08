@@ -71,14 +71,14 @@ public final class FindMeetingQuery {
         }
         else {
             if(currentRun >= requestDuration) {
-                viableMeetingTimes.add(TimeRange.fromStartEnd(start, start+currentRun, false));
+                viableMeetingTimes.add(TimeRange.fromStartDuration(start, currentRun));
             }
             start = min+1;
             currentRun = 0;
         }
     }
     if(currentRun >= requestDuration) {
-        viableMeetingTimes.add(TimeRange.fromStartEnd(start, start+currentRun, false));
+        viableMeetingTimes.add(TimeRange.fromStartDuration(start, currentRun));
     }
 
     return viableMeetingTimes;
