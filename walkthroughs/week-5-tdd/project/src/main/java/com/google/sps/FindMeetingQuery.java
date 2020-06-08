@@ -15,6 +15,7 @@
 package com.google.sps;
 
 import java.util.Collection;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,17 +23,39 @@ import java.util.Iterator;
 public final class FindMeetingQuery {
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    long requestDuration = request.getDuration();
-    Collection<String> requestAttendees = request.getAttendees();
+    long duration = request.getDuration();
+    Collection<String> attendees = request.getAttendees();
+    Collection<String> optionalAttendees = request.getOptionalAttendees();
 
+    // find all the viable meeting times for the mandatory attendees
+    Collection<TimeRange> mandatoryViableMeetingTimes = getViableMeetingTimes(events, duration, attendees);
+    // find all the viable meeting times for the optional attendees
+    Collection<TimeRange> optionalViableMeetingTimes = getViableMeetingTimes(events, duration, optionalAttendees);
+    // see if there are any overlapping meeting times between what the mandatory and optional attendees can attend
+    Collection<TimeRange> intersectionMeetingTimes = intersectionMeetingTimes(duration, mandatoryViableMeetingTimes, optionalViableMeetingTimes);
+
+    // if there is no meeting time where all of the mandatory and optional attendees can attend, return only the times when the mandatory employees are available
+    if(intersectionMeetingTimes.size() == 0) {
+        // case where there are only optional attendees, and there is not a time where all of the optional attendees can attend
+        if(attendees.size() == 0) {
+            return Arrays.asList();
+        }
+        return mandatoryViableMeetingTimes;
+    }
+    else {
+        return intersectionMeetingTimes;
+    }
+  }
+
+  private static Collection<TimeRange> getViableMeetingTimes(Collection<Event> events, long duration, Collection<String> attendees) {
     // used in the function intersection
-    HashMap<String, Boolean> requestAttendeesMap = new HashMap<String, Boolean>();
-    Iterator iterator = requestAttendees.iterator(); 
+    HashMap<String, Boolean> attendeesMap = new HashMap<String, Boolean>();
+    Iterator iterator = attendees.iterator(); 
     while(iterator.hasNext()) {
-        requestAttendeesMap.put((String) iterator.next(), true);
+        attendeesMap.put((String) iterator.next(), true);
     }
 
-    // viableTimes contains all of the minutes where meetings can be held
+    // all of the minutes when meetings can be held will be marked true
     boolean[] viableTimes = new boolean[TimeRange.END_OF_DAY+1];
 
     // initially, all of the minutes are viable
@@ -44,24 +67,69 @@ public final class FindMeetingQuery {
     iterator = events.iterator(); 
     while(iterator.hasNext()) {
         Event event = (Event) iterator.next();
+        Collection<String> eventAttendees = event.getAttendees();
         TimeRange when = event.getWhen();
         int eventStart = when.start();
-        int eventDuration = when.duration();
+        int eventEnd = when.end();
 
-        Collection<String> eventAttendees = event.getAttendees();
+        // check if any of the attendees are attending the event
+        if(attending(attendeesMap, eventAttendees)) {
+            // mark all of the minutes from eventStart to eventEnd as false
+            for(int i=eventStart;i<eventEnd;i++) {
+                viableTimes[i] = false;
+            }
+        }
+    }
+    
+    return linearSearch(viableTimes, duration);
+  }
 
-        // check if any of the attendees in the request are attending the event
-        if(intersection(requestAttendeesMap, eventAttendees)) {
-            // mark all of the minutes from eventStart to eventStart+eventDuration as false
-            for(int j=eventStart;j<eventStart+eventDuration;j++) {
-                viableTimes[j] = false;
+  private static Collection<TimeRange> intersectionMeetingTimes(long duration, Collection<TimeRange> mandatoryViableMeetingTimes, Collection<TimeRange> optionalViableMeetingTimes) {
+    // all of the minutes when mandatory meetings can be held will be marked true
+    boolean[] mandatoryTimes = new boolean[TimeRange.END_OF_DAY+1];
+    Iterator iterator = mandatoryViableMeetingTimes.iterator(); 
+    while(iterator.hasNext()) {
+        TimeRange timeRange = (TimeRange) iterator.next();
+        int start = timeRange.start();
+        int end = timeRange.end();
+        
+        for(int i=start;i<end;i++) {
+            mandatoryTimes[i] = true;
+        }
+    }
+    
+    // all of the minutes when mandatory and optional meetings can be held will be marked true
+    boolean[] intersectionTimes = new boolean[TimeRange.END_OF_DAY+1];
+    iterator = optionalViableMeetingTimes.iterator(); 
+    while(iterator.hasNext()) {
+        TimeRange timeRange = (TimeRange) iterator.next();
+        int start = timeRange.start();
+        int end = timeRange.end();
+        
+        for(int i=start;i<end;i++) {
+            if(mandatoryTimes[i]) {
+                intersectionTimes[i] = true;
             }
         }
     }
 
-    // perform a linear search over the viable start times
-    // for each potential start time, find the largest contiguous viable time range beginning at that start time
-    // if it's a viable meeting time (i.e. it lasts longer than requestDuration), add it to the output
+    return linearSearch(intersectionTimes, duration);
+  }
+
+  private static boolean attending(HashMap<String, Boolean> attendeesMap, Collection<String> eventAttendees) {
+    Iterator iterator = eventAttendees.iterator();
+    while(iterator.hasNext()) {
+        if(attendeesMap.get(iterator.next()) != null)
+            return true;
+    }
+    return false;
+  }
+
+  /* Performs a linear search over the viable start times.
+   * For each potential start time, finds the largest contiguous viable time range beginning at that start time.
+   * If it's a viable meeting time (i.e. it lasts longer than the required duration), adds it to the output.
+  */
+  private static Collection<TimeRange> linearSearch(boolean[] viableTimes, long duration) {
     ArrayList<TimeRange> viableMeetingTimes = new ArrayList<TimeRange>();
     int start = 0;
     int currentRun = 0;
@@ -70,26 +138,17 @@ public final class FindMeetingQuery {
             currentRun++;
         }
         else {
-            if(currentRun >= requestDuration) {
+            if(currentRun >= duration) {
                 viableMeetingTimes.add(TimeRange.fromStartDuration(start, currentRun));
             }
             start = min+1;
             currentRun = 0;
         }
     }
-    if(currentRun >= requestDuration) {
+    if(currentRun >= duration) {
         viableMeetingTimes.add(TimeRange.fromStartDuration(start, currentRun));
     }
 
     return viableMeetingTimes;
-  }
-
-  public static boolean intersection(HashMap<String, Boolean> requestAttendeesMap, Collection<String> eventAttendees) {
-    Iterator iterator = eventAttendees.iterator();
-    while(iterator.hasNext()) {
-        if(requestAttendeesMap.get(iterator.next()) != null)
-            return true;
-    }
-    return false;
   }
 }
