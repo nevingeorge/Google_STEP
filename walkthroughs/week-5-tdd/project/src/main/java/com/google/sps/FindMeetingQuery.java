@@ -22,6 +22,9 @@ import java.util.Iterator;
 
 public final class FindMeetingQuery {
 
+  /* runs in O(n*m+p), where n is the number of events, m is the maximum number of attendees for any given event, and p is
+   * the number of attendees in the request
+   */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long duration = request.getDuration();
     Collection<String> attendees = request.getAttendees();
