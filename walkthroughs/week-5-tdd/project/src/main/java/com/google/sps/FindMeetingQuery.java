@@ -16,9 +16,10 @@ package com.google.sps;
 
 import java.util.Collection;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class FindMeetingQuery {
 
@@ -51,11 +52,11 @@ public final class FindMeetingQuery {
   }
 
   private static Collection<TimeRange> getViableMeetingTimes(Collection<Event> events, long duration, Collection<String> attendees) {
-    // used in the function intersection
-    HashMap<String, Boolean> attendeesMap = new HashMap<String, Boolean>();
+    // used in the function attending
+    Set<String> attendeesSet = new HashSet<String>();
     Iterator iterator = attendees.iterator(); 
     while(iterator.hasNext()) {
-        attendeesMap.put((String) iterator.next(), true);
+        attendeesSet.add((String) iterator.next());
     }
 
     // all of the minutes when meetings can be held will be marked true
@@ -76,7 +77,7 @@ public final class FindMeetingQuery {
         int eventEnd = when.end();
 
         // check if any of the attendees are attending the event
-        if(attending(attendeesMap, eventAttendees)) {
+        if(attending(attendeesSet, eventAttendees)) {
             // mark all of the minutes from eventStart to eventEnd as false
             for(int i=eventStart;i<eventEnd;i++) {
                 viableTimes[i] = false;
@@ -119,10 +120,10 @@ public final class FindMeetingQuery {
     return linearSearch(intersectionTimes, duration);
   }
 
-  private static boolean attending(HashMap<String, Boolean> attendeesMap, Collection<String> eventAttendees) {
+  private static boolean attending(Set<String> attendeesSet, Collection<String> eventAttendees) {
     Iterator iterator = eventAttendees.iterator();
     while(iterator.hasNext()) {
-        if(attendeesMap.get(iterator.next()) != null)
+        if(attendeesSet.contains(iterator.next()))
             return true;
     }
     return false;
