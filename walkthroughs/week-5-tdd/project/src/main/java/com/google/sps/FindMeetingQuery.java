@@ -180,6 +180,52 @@ public final class FindMeetingQuery {
  * The function is called in the case where there is no time range when all of the mandatory and optional attendees can attend.
  * It finds the time slot(s) that allow mandatory attendees and the greatest possible number of optional attendees to attend.
  */
-private static Collection<TimeRange> optimize() {
+private static Collection<TimeRange> optimize(Collection<TimeRange> mandatoryViableMeetingTimes, Collection<Event> events, long duration, Collection<String> optionalAttendees) {
+    // for every timeRange in mandatoryViableMeetingTimes, the map contains a corresponding arraylist of all the events that optional attendees are attending and that overlap with the meeting time
+    HashMap<TimeRange, ArrayList<Event>> map = new HashMap<TimeRange, ArrayList<Event>>();
+    for(TimeRange timeRange: mandatoryViableMeetingTimes) {
+        ArrayList<Event> overlap = new ArrayList<Event>();
+        map.put(timeRange, overlap);
+    }
+
+    for(Event event: events) {
+        // check if any of the optional attendees are attending the event
+        if(attending(optionalAttendees, event.getAttendees)) {
+            TimeRange eventTimeRange = event.getWhen();
+
+            // if the event overlaps with any of the time ranges in mandatoryViableMeetingTimes, add the event to the meeting time's arraylist in map
+            for(TimeRange meetingTimeRange: mandatoryViableMeetingTimes) {
+                if(eventTimeRange.overlap(meetingTimeRange)) {
+                    ArrayList<Event> overlap = map.get(meetingTimeRange);
+                    overlap.add(event);
+                    map.put(meetingTimeRange, overlap);
+                }
+            }
+        }
+    }
+
+    ArrayList<TimeRange> output = new ArrayList<TimeRange>();
+    int numOptionalAttendees = optionalAttendees.size();
+    int max = 0;
+    for(TimeRange timeRange: mandatoryViableMeetingTimes) {
+        // get the maximum number of optional attendees that are available during timeRange
+        // maxAttendanceTimeRanges will contain all the subsets of timeRange when the maximum number of optional attendees can attend
+        ArrayList<timeRange> maxAttendanceTimeRanges = new ArrayList<timeRange>();
+        int maxAttendance = getMaxAttendance(timeRange, map.get(timeRange), maxAttendanceTimeRanges, numOptionalAttendees, duration);
+        if(maxAttendance > max) {
+            output = maxAttendanceTimeRanges;
+            max = maxAttendance;
+        }
+        else if(maxAttendance == max) {
+            output.addAll(maxAttendanceTimeRanges);
+        }
+    }
+
+    return output;
+}
+
+// returns the maximum number of optional attendees that are free during a subset of timeRange at least as long as the required duration
+// maxAttendanceTimeRanges is updated with all the subsets of timeRange where the maximal number of optional attendees can attend
+private static int getMaxAttendance(TimeRange timeRange, ArrayList<Event> overlap, ArrayList<timeRange> maxAttendanceTimeRanges, int numOptionalAttendees, long duration) {
 
 }
