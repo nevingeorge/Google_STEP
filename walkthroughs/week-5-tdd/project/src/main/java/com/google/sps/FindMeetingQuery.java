@@ -39,11 +39,11 @@ public final class FindMeetingQuery {
    */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long duration = request.getDuration();
-    Collection<String> attendees = request.getAttendees();
+    Collection<String> mandatoryAttendees = request.getAttendees();
     Collection<String> optionalAttendees = request.getOptionalAttendees();
 
     // find all the viable meeting times for the mandatory attendees
-    Collection<TimeRange> mandatoryViableMeetingTimes = getViableMeetingTimes(events, duration, attendees);
+    Collection<TimeRange> mandatoryViableMeetingTimes = getViableMeetingTimes(events, duration, mandatoryAttendees);
     // find all the viable meeting times for the optional attendees
     Collection<TimeRange> optionalViableMeetingTimes = getViableMeetingTimes(events, duration, optionalAttendees);
     // see if there are any overlapping meeting times between what the mandatory and optional attendees can attend
@@ -52,7 +52,7 @@ public final class FindMeetingQuery {
     // if there is no meeting time where all of the mandatory and optional attendees can attend, return only the times when the mandatory employees are available
     if(intersectionMeetingTimes.size() == 0) {
         // case where there are only optional attendees, and there is not a time where all of the optional attendees can attend
-        if(attendees.size() == 0) {
+        if(mandatoryAttendees.size() == 0) {
             return Arrays.asList();
         }
         return mandatoryViableMeetingTimes;
@@ -93,7 +93,7 @@ public final class FindMeetingQuery {
         }
     }
     
-    return linearSearch(viableTimes, duration);
+    return getViableTimeRanges(viableTimes, duration);
   }
 
   private static Collection<TimeRange> intersectionMeetingTimes(long duration, Collection<TimeRange> mandatoryViableMeetingTimes, Collection<TimeRange> optionalViableMeetingTimes) {
@@ -121,7 +121,7 @@ public final class FindMeetingQuery {
         }
     }
 
-    return linearSearch(intersectionTimes, duration);
+    return getViableTimeRanges(intersectionTimes, duration);
   }
 
   private static boolean attending(Set<String> attendeesSet, Collection<String> eventAttendees) {
@@ -137,7 +137,7 @@ public final class FindMeetingQuery {
    * For each potential start time, finds the largest contiguous viable time range beginning at that start time.
    * If it's a viable meeting time (i.e. it lasts longer than the required duration), adds it to the output.
   */
-  private static Collection<TimeRange> linearSearch(boolean[] viableTimes, long duration) {
+  private static Collection<TimeRange> getViableTimeRanges(boolean[] viableTimes, long duration) {
     ArrayList<TimeRange> viableMeetingTimes = new ArrayList<TimeRange>();
     int start = 0;
     int currentRun = 0;
