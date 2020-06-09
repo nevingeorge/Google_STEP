@@ -34,8 +34,8 @@ public final class FindMeetingQuery {
    * - If one or more time slots exists so that both mandatory and optional attendees can attend, the function returns those time slots.
    * - Otherwise, the function returns the time slots that fit just the mandatory attendees.
    *
-   * The algorithm runs in O(n*m+p), where n is the number of events, m is the maximum number of attendees for any given event, and p is
-   * the number of attendees in the request.
+   * The algorithm up to the optional coding challenge runs in O(n*m+p), where n is the number of events, m is the maximum number of attendees for any given event, 
+   * and p is the number of attendees in the request.
    */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long duration = request.getDuration();
@@ -226,6 +226,67 @@ private static Collection<TimeRange> optimize(Collection<TimeRange> mandatoryVia
 
 // returns the maximum number of optional attendees that are free during a subset of timeRange at least as long as the required duration
 // maxAttendanceTimeRanges is updated with all the subsets of timeRange where the maximal number of optional attendees can attend
-private static int getMaxAttendance(TimeRange timeRange, ArrayList<Event> overlap, ArrayList<timeRange> maxAttendanceTimeRanges, int numOptionalAttendees, long duration) {
+@SuppressWarnings("unchecked")
+private static int getMaxAttendance(TimeRange timeRange, ArrayList<Event> overlap, ArrayList<timeRange> maxAttendanceTimeRanges, int numOptionalAttendees, long meetingDuration) {
+    int start = timeRange.start();
+    int duration = timeRange.duration();
+    Set<String>[] attendeesEveryMinute = new HashSet[duration];
+    for(int i=0;i<duration;i++) {
+        attendeesEveryMinute[i] = new HashSet<String>();
+    }
 
+    for(Event event: overlap) {
+        Set<String> attendees = event.getAttendees();
+
+        TimeRange eventTimeRange = event.getWhen();
+        int eventStart = eventTimeRange.start();
+        int eventEnd = eventTimeRange.end();
+        int startInInterval = Math.min(start, eventStart);
+        for(int min=startInInterval-start; min<eventEnd-start; min++) {
+            for(String attendee: attendees) {
+                attendeesEveryMinute[min].add(attendee);
+            }
+        }
+    }
+    
+    for(int numUnavailable=1; numUnavailable<numOptionalAttendees; numUnavailable++) {
+        for(int startMin=0; startMin<=duration-meetingDuration; startMin++) {
+            Set<String> unavailable = new HashSet<String>();
+            for(int min=startMin; min<startMin+meetingDuration; min++) {
+                for(String attendee: attendeesEveryMinute[min]) {
+                    unavailable.add(attendee);
+                }
+            }
+
+            if(unavailable.size() <= numUnavailable) {
+                int checkNextMin = startMin+meetingDuration;
+
+                for(checkNextMin; checkNextMin<duration; checkNextMin++) {
+                    if(reachedLimit(attendeesEveryMinute[checkNextMin], unavailable, numUnavailable)) {
+                        break;
+                    }
+                }
+
+                maxAttendanceTimeRanges.add(fromStartEnd(startMin+start, checkNextMin+start-1, false));
+                startMin = checkNextMin-1;
+            }
+        }
+        
+        if(maxAttendanceTimeRanges.size() > 0) {
+            return numOptionalAttendees-numUnavailable;
+        }
+    }
+
+    // there is no time range of the necessary duration that any attendee can attend
+    return 0;
+}
+
+private static boolean reachedLimit(Set<String>[] attendees, Set<String> unavailable, int numUnavailable) {
+    for(String attendee: attendees) {
+        unavailable.add(attendee);
+        if(unavailable.size() > numUnavailable) {
+            return true;
+        }
+    }
+    return false;
 }
