@@ -61,7 +61,12 @@ public final class FindMeetingQuery {
         return intersectionMeetingTimes;
     }
   }
-
+  
+  /*
+   * The function returns a list of all the meeting times when all the attendees can attend.
+   * It uses a boolean array containing values for every minute of the day, where a minute is marked as false if an attendee has an event during that time.
+   * It then runs a linear search on the boolean array to determine if there are any contiguous time ranges longer than the specified duration.
+   */
   private static Collection<TimeRange> getViableMeetingTimes(Collection<Event> events, long duration, Collection<String> attendees) {
     // used in the function attending
     Set<String> attendeesSet = new HashSet<String>();
@@ -71,13 +76,10 @@ public final class FindMeetingQuery {
 
     // all of the minutes when meetings can be held will be marked true
     boolean[] viableTimes = new boolean[TimeRange.END_OF_DAY+1];
-
-    // initially, all of the minutes are viable
     for(int i=0;i<viableTimes.length;i++) {
         viableTimes[i] = true;
     }
 
-    // consider each event independently
     for(Event event: events) {
         Collection<String> eventAttendees = event.getAttendees();
         TimeRange when = event.getWhen();
@@ -93,9 +95,16 @@ public final class FindMeetingQuery {
         }
     }
     
+    // runs a linear search on the boolean array to determine if there are any contiguous time ranges longer than the specified duration
     return getViableTimeRanges(viableTimes, duration);
   }
 
+  /*
+   * The function returns a list of all the time ranges that are common to both mandatoryViableMeetingTimes and optionalViableMeetingTimes.
+   * It uses a boolean array containing values for every minute of the day, where a minute is marked as true if it is in a time range 
+   * found in both mandatoryViableMeetingTimes and optionalViableMeetingTimes.
+   * It then runs a linear search on the boolean array to determine if there are any contiguous time ranges longer than the specified duration.
+   */
   private static Collection<TimeRange> intersectionMeetingTimes(long duration, Collection<TimeRange> mandatoryViableMeetingTimes, Collection<TimeRange> optionalViableMeetingTimes) {
     // all of the minutes when mandatory meetings can be held will be marked true
     boolean[] mandatoryTimes = new boolean[TimeRange.END_OF_DAY+1];
@@ -121,9 +130,11 @@ public final class FindMeetingQuery {
         }
     }
 
+    // runs a linear search on the boolean array to determine if there are any contiguous time ranges longer than the specified duration
     return getViableTimeRanges(intersectionTimes, duration);
   }
 
+  // returns true if any of the attendees in attendeesSet are in eventAttendees
   private static boolean attending(Set<String> attendeesSet, Collection<String> eventAttendees) {
     for(String eventAttendee: eventAttendees) {
         if(attendeesSet.contains(eventAttendee)) {
@@ -133,9 +144,9 @@ public final class FindMeetingQuery {
     return false;
   }
 
-  /* Performs a linear search over the viable start times.
-   * For each potential start time, finds the largest contiguous viable time range beginning at that start time.
-   * If it's a viable meeting time (i.e. it lasts longer than the required duration), adds it to the output.
+  /* The function runs a linear search over the viable start times.
+   * For each potential start time, it finds the largest contiguous viable time range beginning at that start time.
+   * If it's a viable time range (lasts longer than the required duration), the function adds it to the output.
   */
   private static Collection<TimeRange> getViableTimeRanges(boolean[] viableTimes, long duration) {
     ArrayList<TimeRange> viableMeetingTimes = new ArrayList<TimeRange>();
