@@ -17,7 +17,6 @@ package com.google.sps;
 import java.util.Collection;
 import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -54,9 +53,8 @@ public final class FindMeetingQuery {
   private static Collection<TimeRange> getViableMeetingTimes(Collection<Event> events, long duration, Collection<String> attendees) {
     // used in the function attending
     Set<String> attendeesSet = new HashSet<String>();
-    Iterator iterator = attendees.iterator(); 
-    while(iterator.hasNext()) {
-        attendeesSet.add((String) iterator.next());
+    for(String attendee: attendees) {
+        attendeesSet.add(attendee);
     }
 
     // all of the minutes when meetings can be held will be marked true
@@ -68,9 +66,7 @@ public final class FindMeetingQuery {
     }
 
     // consider each event independently
-    iterator = events.iterator(); 
-    while(iterator.hasNext()) {
-        Event event = (Event) iterator.next();
+    for(Event event: events) {
         Collection<String> eventAttendees = event.getAttendees();
         TimeRange when = event.getWhen();
         int eventStart = when.start();
@@ -91,9 +87,7 @@ public final class FindMeetingQuery {
   private static Collection<TimeRange> intersectionMeetingTimes(long duration, Collection<TimeRange> mandatoryViableMeetingTimes, Collection<TimeRange> optionalViableMeetingTimes) {
     // all of the minutes when mandatory meetings can be held will be marked true
     boolean[] mandatoryTimes = new boolean[TimeRange.END_OF_DAY+1];
-    Iterator iterator = mandatoryViableMeetingTimes.iterator(); 
-    while(iterator.hasNext()) {
-        TimeRange timeRange = (TimeRange) iterator.next();
+    for(TimeRange timeRange: mandatoryViableMeetingTimes) {
         int start = timeRange.start();
         int end = timeRange.end();
         
@@ -104,9 +98,7 @@ public final class FindMeetingQuery {
     
     // all of the minutes when mandatory and optional meetings can be held will be marked true
     boolean[] intersectionTimes = new boolean[TimeRange.END_OF_DAY+1];
-    iterator = optionalViableMeetingTimes.iterator(); 
-    while(iterator.hasNext()) {
-        TimeRange timeRange = (TimeRange) iterator.next();
+    for(TimeRange timeRange: optionalViableMeetingTimes) {
         int start = timeRange.start();
         int end = timeRange.end();
         
@@ -121,10 +113,10 @@ public final class FindMeetingQuery {
   }
 
   private static boolean attending(Set<String> attendeesSet, Collection<String> eventAttendees) {
-    Iterator iterator = eventAttendees.iterator();
-    while(iterator.hasNext()) {
-        if(attendeesSet.contains(iterator.next()))
+    for(String eventAttendee: eventAttendees) {
+        if(attendeesSet.contains(eventAttendee)) {
             return true;
+        }
     }
     return false;
   }
