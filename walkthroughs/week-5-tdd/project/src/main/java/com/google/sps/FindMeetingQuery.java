@@ -22,8 +22,20 @@ import java.util.Set;
 
 public final class FindMeetingQuery {
 
-  /* runs in O(n*m+p), where n is the number of events, m is the maximum number of attendees for any given event, and p is
-   * the number of attendees in the request
+  /* 
+   * This function simulates the "find a meeting" feature on Google calendar.
+   * A meeting request contains a 1) name, 2) duration in minutes, and 3) collection of attendees.
+   * Each event in the collection of events contains a 1) name, 2) time range, and 3) collection of attendees.
+   * Given a meeting request and a list of all known events, the function returns a collection of all the possible time ranges when the meeting can take place.
+   * These returned meeting times must last at least as long as the specified duration, and every mandatory attendee must have no other conflicts during 
+   * that time range (i.e. there cannot exist an event that a mandatory attendee is attending at the same time of the meeting).
+   * 
+   * The function also provides support for optional attendees.
+   * - If one or more time slots exists so that both mandatory and optional attendees can attend, the function returns those time slots.
+   * - Otherwise, the function returns the time slots that fit just the mandatory attendees.
+   *
+   * The algorithm runs in O(n*m+p), where n is the number of events, m is the maximum number of attendees for any given event, and p is
+   * the number of attendees in the request.
    */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long duration = request.getDuration();
