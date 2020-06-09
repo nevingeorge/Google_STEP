@@ -55,7 +55,10 @@ public final class FindMeetingQuery {
         if(mandatoryAttendees.size() == 0) {
             return Arrays.asList();
         }
-        return mandatoryViableMeetingTimes;
+
+        // optional coding challenge
+        // finds the time slot(s) that allow mandatory attendees and the greatest possible number of optional attendees to attend
+        return optimize(mandatoryViableMeetingTimes, events, duration, optionalAttendees);
     }
     else {
         return intersectionMeetingTimes;
@@ -170,4 +173,13 @@ public final class FindMeetingQuery {
 
     return viableMeetingTimes;
   }
+}
+
+/*
+ * This is the optional coding challenge.
+ * The function is called in the case where there is no time range when all of the mandatory and optional attendees can attend.
+ * It finds the time slot(s) that allow mandatory attendees and the greatest possible number of optional attendees to attend.
+ */
+private static Collection<TimeRange> optimize() {
+
 }
