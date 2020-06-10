@@ -274,7 +274,7 @@ public final class FindMeetingQuery {
                         }
                     }
 
-                    maxAttendanceTimeRanges.add(TimeRange.fromStartEnd(startMin, checkNextMin-1, false));
+                    maxAttendanceTimeRanges.add(TimeRange.fromStartEnd(startMin, checkNextMin, false));
                     startMin = checkNextMin-1;
                 }
             }
