@@ -196,9 +196,7 @@ public final class FindMeetingQuery {
                 // if the event overlaps with any of the time ranges in mandatoryViableMeetingTimes, add the event to the meeting time's arraylist in map
                 for(TimeRange meetingTimeRange: mandatoryViableMeetingTimes) {
                     if(eventTimeRange.overlaps(meetingTimeRange)) {
-                        ArrayList<Event> overlap = map.get(meetingTimeRange);
-                        overlap.add(event);
-                        map.put(meetingTimeRange, overlap);
+                        map.get(meetingTimeRange).add(event);
                     }
                 }
             }
