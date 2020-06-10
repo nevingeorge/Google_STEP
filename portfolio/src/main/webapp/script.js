@@ -136,13 +136,6 @@ function createListElement(text) {
     return liElt;
 }
 
-async function deleteComments() {
-    await fetch("/delete-data", {method: 'POST'});
-    console.log('Deleted comments.');
-
-    getComments();
-}
-
 function drawTimeline() {
     const data = new google.visualization.DataTable();
 
