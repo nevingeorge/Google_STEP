@@ -52,11 +52,6 @@ public final class FindMeetingQuery {
 
         // if there is no meeting time where all of the mandatory and optional attendees can attend, return only the times when the mandatory employees are available
         if(intersectionMeetingTimes.size() == 0) {
-            // case where there are only optional attendees, and there is not a time where all of the optional attendees can attend
-            if(mandatoryAttendees.size() == 0) {
-                return Arrays.asList();
-            }
-
             // optional coding challenge
             // finds the time slot(s) that allow mandatory attendees and the greatest possible number of optional attendees to attend
             return optimize(mandatoryViableMeetingTimes, events, duration, optionalAttendees);
