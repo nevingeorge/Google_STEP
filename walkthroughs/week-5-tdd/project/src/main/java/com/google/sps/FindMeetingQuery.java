@@ -221,7 +221,12 @@ public final class FindMeetingQuery {
             }
         }
 
-        return output;
+        if(max == 0) {
+            return mandatoryViableMeetingTimes;
+        }
+        else {
+            return output;
+        }
     }
 
     // returns the maximum number of optional attendees that are free during a subset of timeRange at least as long as the required duration
