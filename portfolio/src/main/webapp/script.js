@@ -27,7 +27,7 @@ function getLoginStatus() {
         }
         else {
             console.log('User is not logged in.');
-            loginMessageContainer.innerHTML = '<br><p>Login <a href=\"' + loginStatus[1] + '\">here</a> to post comments and vote on what should be my next project!</p>';
+            loginMessageContainer.innerHTML = '<p>Login <a href=\"' + loginStatus[1] + '\">here</a> to post comments and vote on what should be my next project!</p>';
         }
     });
 }
@@ -72,7 +72,7 @@ function getComments() {
         else {
             commentsEltList.innerHTML = '';
             commentsHistory.forEach(commentInfo => {
-                commentsEltList.appendChild(createListElement(commentInfo[1] + " " + commentInfo[2] + ": " + commentInfo[0]));
+                commentsEltList.innerHTML += '<h4>' + commentInfo[1] + ' ' + commentInfo[2] + '</h4><p>' + commentInfo[0] + '</p>';
             });
         }
     });
@@ -123,13 +123,6 @@ function getUserInfo(userInfo) {
         userInfoContainer.innerHTML += '<h2>Hi ' + userInfo.lastName + '!</h2>';
     }
     console.log('Got user info.');
-}
-
-// creates an <li> element containing text
-function createListElement(text) {
-    const liElt = document.createElement('li');
-    liElt.innerText = text;
-    return liElt;
 }
 
 function drawTimeline() {

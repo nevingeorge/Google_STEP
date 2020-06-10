@@ -37,15 +37,15 @@
         </div>
         <div id="comments-container">
             <h2>Comments</h2>
-            <div id="comments-content-container"></div><br>
             <div id="comments-form-container" class="hide-container">
                 <form action="/comments" method="POST">
                     <textarea name="comment" placeholder="Enter your comment here"></textarea><br>
                     <input type="submit" class="button" name="submit" value="Submit">
                 </form>
                 <h4>Max number of comments to display (0-10): </h4>
-                <input type="number" value="5" id="limit" min="0" max="10" onchange="getComments()">
+                <input type="number" value="5" id="limit" min="0" max="10" onchange="getComments()"><br>
             </div>
+            <div id="comments-content-container" class="comments-content-container"></div>
         </div>
     </div>
   </body>

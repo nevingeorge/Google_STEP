@@ -198,3 +198,18 @@ div.chart-container {
 div.hide-container {
     display: none;
 }
+
+div.comments-content-container {
+    width: 800px;
+}
+
+div.comments-content-container h4 {
+    margin-bottom: 6px;
+    padding: 0px;
+}
+
+div.comments-content-container p {
+    margin-top: 0px;
+    margin-bottom: 17px;
+    padding: 0px;
+}
