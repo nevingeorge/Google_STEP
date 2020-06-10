@@ -64,7 +64,7 @@ function getComments() {
     var limit = document.getElementById("limit").value;
 
     fetch('/comments?limit=' + limit).then(response => response.json()).then(commentsHistory => {
-        const commentsEltList = document.getElementById('comments-container');
+        const commentsEltList = document.getElementById('comments-content-container');
 
         if(Object.keys(commentsHistory).length == 0) {
             commentsEltList.innerHTML = 'Be the first to leave a comment!';
@@ -94,7 +94,7 @@ function drawNextProject() {
             legend: {position: "none"},
         };
 
-        const chart = new google.visualization.ColumnChart(document.getElementById('next-project-container'));
+        const chart = new google.visualization.ColumnChart(document.getElementById('chart-container'));
         chart.draw(data, options);
     });
 
