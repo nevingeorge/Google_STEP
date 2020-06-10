@@ -120,10 +120,6 @@ textarea::placeholder {
   font-family: Verdana, Helvetica, sans-serif;
 }
 
-div.user-profile-container {
-    display: none;
-}
-
 .logo-left {
     border:0px;
     margin:0px;
@@ -200,5 +196,5 @@ div.next-project-container {
 }
 
 div.hide-container {
-    display: "none";
+    display: none;
 }
