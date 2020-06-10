@@ -45,20 +45,8 @@ public final class FindMeetingQuery {
 
         // find all the viable meeting times for the mandatory attendees
         Collection<TimeRange> mandatoryViableMeetingTimes = getViableMeetingTimes(events, duration, mandatoryAttendees);
-        // find all the viable meeting times for the optional attendees
-        Collection<TimeRange> optionalViableMeetingTimes = getViableMeetingTimes(events, duration, optionalAttendees);
-        // see if there are any overlapping meeting times between what the mandatory and optional attendees can attend
-        Collection<TimeRange> intersectionMeetingTimes = intersectionMeetingTimes(duration, mandatoryViableMeetingTimes, optionalViableMeetingTimes);
 
-        // if there is no meeting time where all of the mandatory and optional attendees can attend, return only the times when the mandatory employees are available
-        if(intersectionMeetingTimes.size() == 0) {
-            // optional coding challenge
-            // finds the time slot(s) that allow mandatory attendees and the greatest possible number of optional attendees to attend
-            return optimize(mandatoryViableMeetingTimes, events, duration, optionalAttendees);
-        }
-        else {
-            return intersectionMeetingTimes;
-        }
+        return optimize(mandatoryViableMeetingTimes, events, duration, optionalAttendees);
     }
     
     /*
@@ -251,7 +239,7 @@ public final class FindMeetingQuery {
             }
         }
         
-        for(int numUnavailable=1; numUnavailable<optionalAttendees.size(); numUnavailable++) {
+        for(int numUnavailable=0; numUnavailable<optionalAttendees.size(); numUnavailable++) {
             for(int startMin=start; startMin<=end-meetingDuration; startMin++) {
                 Set<String> unavailable = new HashSet<String>();
                 for(int min=startMin; min<startMin+meetingDuration; min++) {
