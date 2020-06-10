@@ -15,6 +15,9 @@
 google.charts.load("current", {'packages':["timeline", "corechart"]});
 
 function getLoginStatus() {
+    // hide the profile by default
+    hideProfile();
+
     fetch('/login-status').then(response => response.json()).then(loginStatus => {
         const loginMessageContainer = document.getElementById("login-message-container");
         if(loginStatus[0]) {
@@ -24,7 +27,6 @@ function getLoginStatus() {
         }
         else {
             console.log('User is not logged in.');
-            hideProfile();
             loginMessageContainer.innerHTML = '<br><p>Login <a href=\"' + loginStatus[1] + '\">here</a> to post comments and vote on what should be my next project!</p>';
         }
     });
