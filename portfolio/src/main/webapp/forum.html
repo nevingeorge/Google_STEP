@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js"></script>
   </head>
-  <body onload="getLoginStatus(); getComments(); drawNextProject();">
+  <body onload="getComments(); drawNextProject(); getLoginStatus();">
     <ul class="navbar-ul">
         <li class="navbar-li"><a class="active navbar-a" href="/index.html">Home</a></li>
         <li class="navbar-li"><a class="navbar-a" href="/about.html">About</a></li>
@@ -22,7 +22,7 @@
         <h2>Comments</h2>
         <div id="comments-container"></div>
         <br>
-        <div id="comments-form-container">
+        <div id="comments-form-container" class="hide-container">
             <form action="/comments" method="POST">
                 <textarea name="comment" placeholder="Enter your comment here"></textarea>
                 <br>
@@ -36,7 +36,7 @@
         </div>
         <h2>Vote on my next project!</h2>
         <div id="next-project-container" class="next-project-container"></div>
-        <div id="vote-container">
+        <div id="vote-container" class="hide-container">
             <form action="/next-project" method="POST">
                 <select name="project">
                     <option value="Website">Website</option>
@@ -46,7 +46,7 @@
                 <input type="submit" class="button" name="submit" value="Submit">
             </form>
         </div>
-        <div id="user-info-container"></div>
+        <div id="user-info-container" class="hide-container"></div>
         <div id="login-message-container"></div>
     </div>
   </body>
