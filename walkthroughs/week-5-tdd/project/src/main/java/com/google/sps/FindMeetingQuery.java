@@ -48,20 +48,14 @@ public final class FindMeetingQuery {
 
         // optional coding challenge
         // find the times within mandatoryViableMeetingTimes when the greatest number of optional attendees can attend
-        return optimize(mandatoryViableMeetingTimes, events, duration, optionalAttendees);
+        return optionalAttendees(mandatoryViableMeetingTimes, events, duration, optionalAttendees);
     }
     
-    /*
-    * The function returns a list of all the meeting times when all the attendees can attend.
-    *
-    * Algorithm Description:
-    * It first creates a boolean array containing values for every minute of the day, where a minute is marked as false if an attendee has an event during that time.
-    * It then runs a linear search on the boolean array to determine if there are any contiguous time ranges longer than the specified duration.
-    */
+    // returns a list the meeting times when all the attendees can attend.
     private static Collection<TimeRange> getViableMeetingTimes(Collection<Event> events, long duration, Collection<String> attendees) {
         // used in the function attending
         Set<String> attendeesSet = new HashSet<String>();
-        for(String attendee: attendees) {
+        for(String attendee : attendees) {
             attendeesSet.add(attendee);
         }
 
@@ -71,7 +65,7 @@ public final class FindMeetingQuery {
             viableTimes[i] = true;
         }
 
-        for(Event event: events) {
+        for(Event event : events) {
             Collection<String> eventAttendees = event.getAttendees();
             TimeRange when = event.getWhen();
             int eventStart = when.start();
@@ -86,7 +80,8 @@ public final class FindMeetingQuery {
             }
         }
         
-        /* Run a linear search over the viable start times.
+        /* 
+         * Run a linear search over the viable start times.
          * For each potential start time, find the largest contiguous viable time range beginning at that start time.
          * If the time range lasts longer than the required duration, add it to the output.
          */
@@ -114,7 +109,7 @@ public final class FindMeetingQuery {
 
     // returns true if any of the attendees in attendeesSet are in eventAttendees
     private static boolean attending(Collection<String> attendeesSet, Collection<String> eventAttendees) {
-        for(String eventAttendee: eventAttendees) {
+        for(String eventAttendee : eventAttendees) {
             if(attendeesSet.contains(eventAttendee)) {
                 return true;
             }
@@ -122,74 +117,55 @@ public final class FindMeetingQuery {
         return false;
     }
 
-    /*
-    * This is the optional coding challenge.
-    * The function finds the time slot(s) that allow all the mandatory attendees and the greatest possible number of optional attendees to attend.
-    *
-    * Algorithm Overview:
-    * First, for each meeting time in mandatoryViableMeetingTimes, the function finds and associates with the meeting time (in a hash map) any events that 
-    * optional attendees are attending and whose time range overlaps with the meeting time.
-    * Then, for each time range in mandatoryViableMeetingTimes, the function finds the maximum number of optional attendees that can attend.
-    * It then obtains the maximum of these time range maximums, and returns all of the time ranges that allow this maximum number of optional attendees to attend.
-    */
-    private static Collection<TimeRange> optimize(Collection<TimeRange> mandatoryViableMeetingTimes, Collection<Event> events, long duration, Collection<String> optionalAttendees) {
-        // for every timeRange in mandatoryViableMeetingTimes, the map contains a corresponding arraylist of all the events that optional attendees are attending and that overlap with the meeting time
-        HashMap<TimeRange, ArrayList<Event>> map = new HashMap<TimeRange, ArrayList<Event>>();
-        for(TimeRange timeRange: mandatoryViableMeetingTimes) {
-            ArrayList<Event> overlap = new ArrayList<Event>();
-            map.put(timeRange, overlap);
+    // finds the time slot(s) that allow all the mandatory attendees and the greatest possible number of optional attendees to attend
+    private static Collection<TimeRange> optionalAttendees(Collection<TimeRange> mandatoryViableMeetingTimes, Collection<Event> events, long duration, Collection<String> optionalAttendees) {
+        // for every timeRange in mandatoryViableMeetingTimes, eventOverlap contains a corresponding arraylist of all the events that optional attendees are attending and that overlap with the meeting time
+        HashMap<TimeRange, ArrayList<Event>> eventOverlap = new HashMap<TimeRange, ArrayList<Event>>();
+        for(TimeRange timeRange : mandatoryViableMeetingTimes) {
+            eventOverlap.put(timeRange, new ArrayList<Event>());
         }
 
-        for(Event event: events) {
+        for(Event event : events) {
             // check if any of the optional attendees are attending the event
             if(attending(optionalAttendees, event.getAttendees())) {
                 TimeRange eventTimeRange = event.getWhen();
 
-                // if the event overlaps with any of the time ranges in mandatoryViableMeetingTimes, add the event to the meeting time's arraylist in map
-                for(TimeRange meetingTimeRange: mandatoryViableMeetingTimes) {
+                // if the event overlaps with any of the time ranges in mandatoryViableMeetingTimes, add the event to the meeting time's arraylist in eventOverlap
+                for(TimeRange meetingTimeRange : mandatoryViableMeetingTimes) {
                     if(eventTimeRange.overlaps(meetingTimeRange)) {
-                        map.get(meetingTimeRange).add(event);
+                        eventOverlap.get(meetingTimeRange).add(event);
                     }
                 }
             }
         }
 
-        ArrayList<TimeRange> output = new ArrayList<TimeRange>();
-        int max = 0;
-        for(TimeRange timeRange: mandatoryViableMeetingTimes) {
+        ArrayList<TimeRange> maxOptionalViableMeetingTimes = new ArrayList<TimeRange>();
+        int maxOptionalAttendees = 0;
+        for(TimeRange timeRange : mandatoryViableMeetingTimes) {
             // get the maximum number of optional attendees that are available during timeRange
             // maxAttendanceTimeRanges will contain all the subsets of timeRange when the maximum number of optional attendees can attend
             ArrayList<TimeRange> maxAttendanceTimeRanges = new ArrayList<TimeRange>();
-            int maxAttendance = getMaxAttendance(timeRange, map.get(timeRange), maxAttendanceTimeRanges, optionalAttendees, (int) duration);
-            if(maxAttendance > max) {
-                output = maxAttendanceTimeRanges;
-                max = maxAttendance;
+            int maxAttendance = getMaxAttendance(timeRange, eventOverlap.get(timeRange), maxAttendanceTimeRanges, optionalAttendees, (int) duration);
+            if(maxAttendance > maxOptionalAttendees) {
+                maxOptionalViableMeetingTimes = maxAttendanceTimeRanges;
+                maxOptionalAttendees = maxAttendance;
             }
-            else if(maxAttendance == max) {
-                output.addAll(maxAttendanceTimeRanges);
+            else if(maxAttendance == maxOptionalAttendees) {
+                maxOptionalViableMeetingTimes.addAll(maxAttendanceTimeRanges);
             }
         }
 
         // no times when any optional attendees can attend
-        if(max == 0) {
+        if(maxOptionalAttendees == 0) {
             return mandatoryViableMeetingTimes;
         }
         else {
-            return output;
+            return maxOptionalViableMeetingTimes;
         }
     }
 
-    /*
-     * The function returns the maximum number of optional attendees that are free during a subset of timeRange longer than the required duration.
-     * maxAttendanceTimeRanges is updated with all the subsets of timeRange where the maximal number of optional attendees can attend.
-     *
-     * Algorithm Description:
-     * First, the algorithm associates with every minute of timeRange a hash set containing all of the optional attendees that are unvailable during that minute.
-     * It then checks to see if there are time ranges when 0 optional attendees are unavailable, 1, 2, ... 
-     * For each numUnavailable, it goes through every possible meeting start time and sees if a meeting of the minimum duration can take place.
-     * It then expands the meeting duration as much as possible before too many optional attendees become unavailable.
-     * Once the algorithm finds a numUnavailable with time ranges that work, it returns it.
-     */
+    // returns the maximum number of optional attendees that are free during a subset of timeRange longer than the required duration.
+    // maxAttendanceTimeRanges is updated with all the subsets of timeRange where the maximal number of optional attendees can attend.
     @SuppressWarnings("unchecked")
     private static int getMaxAttendance(TimeRange timeRange, ArrayList<Event> overlap, ArrayList<TimeRange> maxAttendanceTimeRanges, Collection<String> optionalAttendees, int meetingDuration) {
         int start = timeRange.start();
@@ -200,7 +176,7 @@ public final class FindMeetingQuery {
             attendeesEveryMinute[i] = new HashSet<String>();
         }
 
-        for(Event event: overlap) {
+        for(Event event : overlap) {
             Set<String> attendees = event.getAttendees();
 
             TimeRange eventTimeRange = event.getWhen();
@@ -211,7 +187,7 @@ public final class FindMeetingQuery {
 
             // for every minute within eventTimeRange (that's also within timeRange), add to its corresponding HashSet the optional attendees that are attending the event
             for(int min=startInInterval; min<endInInterval; min++) {
-                for(String attendee: attendees) {
+                for(String attendee : attendees) {
                     if(optionalAttendees.contains(attendee))
                         attendeesEveryMinute[min-start].add(attendee);
                 }
@@ -226,7 +202,7 @@ public final class FindMeetingQuery {
 
                 // see if you can have a meeting of the smallest possible duration beginning at startMin
                 for(int min=startMin; min<startMin+meetingDuration; min++) {
-                    for(String attendee: attendeesEveryMinute[min-start]) {
+                    for(String attendee : attendeesEveryMinute[min-start]) {
                         unavailable.add(attendee);
                     }
                 }
@@ -260,7 +236,7 @@ public final class FindMeetingQuery {
     
     // checks if you can add the people in attendees to unavailable without exceeding the maximum size
     private static boolean reachedLimit(Set<String> attendees, Set<String> unavailable, int numUnavailable) {
-        for(String attendee: attendees) {
+        for(String attendee : attendees) {
             unavailable.add(attendee);
             if(unavailable.size() > numUnavailable) {
                 return true;
