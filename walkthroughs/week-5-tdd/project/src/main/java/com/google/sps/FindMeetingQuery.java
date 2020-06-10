@@ -229,6 +229,7 @@ public final class FindMeetingQuery {
     @SuppressWarnings("unchecked")
     private static int getMaxAttendance(TimeRange timeRange, ArrayList<Event> overlap, ArrayList<TimeRange> maxAttendanceTimeRanges, int numOptionalAttendees, int meetingDuration) {
         int start = timeRange.start();
+        int end = timeRange.end();
         int duration = timeRange.duration();
         Set<String>[] attendeesEveryMinute = new HashSet[duration];
         for(int i=0;i<duration;i++) {
@@ -241,19 +242,20 @@ public final class FindMeetingQuery {
             TimeRange eventTimeRange = event.getWhen();
             int eventStart = eventTimeRange.start();
             int eventEnd = eventTimeRange.end();
-            int startInInterval = Math.min(start, eventStart);
-            for(int min=startInInterval-start; min<eventEnd-start; min++) {
+            int startInInterval = Math.max(start, eventStart);
+            int endInInterval = Math.min(end, eventEnd);
+            for(int min=startInInterval; min<endInInterval; min++) {
                 for(String attendee: attendees) {
-                    attendeesEveryMinute[min].add(attendee);
+                    attendeesEveryMinute[min-start].add(attendee);
                 }
             }
         }
         
         for(int numUnavailable=1; numUnavailable<numOptionalAttendees; numUnavailable++) {
-            for(int startMin=0; startMin<=duration-meetingDuration; startMin++) {
+            for(int startMin=start; startMin<=end-meetingDuration; startMin++) {
                 Set<String> unavailable = new HashSet<String>();
                 for(int min=startMin; min<startMin+meetingDuration; min++) {
-                    for(String attendee: attendeesEveryMinute[min]) {
+                    for(String attendee: attendeesEveryMinute[min-start]) {
                         unavailable.add(attendee);
                     }
                 }
@@ -261,13 +263,13 @@ public final class FindMeetingQuery {
                 if(unavailable.size() <= numUnavailable) {
                     int checkNextMin;
 
-                    for(checkNextMin=startMin+meetingDuration; checkNextMin<duration; checkNextMin++) {
-                        if(reachedLimit(attendeesEveryMinute[checkNextMin], unavailable, numUnavailable)) {
+                    for(checkNextMin=startMin+meetingDuration; checkNextMin<end; checkNextMin++) {
+                        if(reachedLimit(attendeesEveryMinute[checkNextMin-start], unavailable, numUnavailable)) {
                             break;
                         }
                     }
 
-                    maxAttendanceTimeRanges.add(TimeRange.fromStartEnd(startMin+start, checkNextMin+start-1, false));
+                    maxAttendanceTimeRanges.add(TimeRange.fromStartEnd(startMin, checkNextMin-1, false));
                     startMin = checkNextMin-1;
                 }
             }
