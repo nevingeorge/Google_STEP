@@ -116,10 +116,6 @@ function getUserInfo(userInfo) {
     const userInfoContainer = document.getElementById('user-info-container');
     userInfoContainer.innerHTML = '';
 
-    if(!userInfo.canVote) {
-        userInfoContainer.innerHTML += '<h4>Thanks for voting!</h4>';
-    }
-    userInfoContainer.innerHTML += '<br>'
     if(userInfo.firstName.localeCompare("") != 0) {
         userInfoContainer.innerHTML += '<h2>Hi ' + userInfo.firstName + '!</h2>';
     }
