@@ -16,28 +16,13 @@ package com.google.sps.servlets;
 
 public class UserInfo {
 
-    public static String firstName;
-    public static String lastName;
-    public static boolean canVote;
+    public String firstName;
+    public String lastName;
+    public boolean canVote;
 
     public UserInfo(String firstName, String lastName, boolean canVote) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.canVote = canVote;
     }
-
-    public String getJson() 
-    { 
-        String json = "{";
-        json += "\"firstName\": ";
-        json += "\"" + firstName + "\"";
-        json += ", ";
-        json += "\"lastName\": ";
-        json += "\"" + lastName + "\"";
-        json += ", ";
-        json += "\"canVote\": ";
-        json += canVote;
-        json += "}";
-        return json; 
-    } 
 }

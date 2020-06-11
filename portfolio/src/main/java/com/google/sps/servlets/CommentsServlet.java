@@ -26,8 +26,6 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken; 
-import java.lang.reflect.Type;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

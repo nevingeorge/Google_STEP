@@ -21,6 +21,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.PrintWriter;
@@ -38,7 +39,8 @@ public class UserInfoServlet extends HttpServlet {
         if(userService.isUserLoggedIn()) {
             Entity userEntity = getUserEntity(userService.getCurrentUser().getUserId());
             UserInfo userInfo = new UserInfo((String) userEntity.getProperty("firstName"), (String) userEntity.getProperty("lastName"), (boolean) userEntity.getProperty("canVote"));
-            String json = userInfo.getJson();
+            Gson gson = new Gson();
+            String json = gson.toJson(userInfo);
             response.setContentType("application/json;");
             response.getWriter().println(json);
         }
