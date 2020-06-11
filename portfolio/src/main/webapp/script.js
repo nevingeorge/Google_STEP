@@ -71,8 +71,11 @@ function getComments() {
         }
         else {
             commentsEltList.innerHTML = '';
-            commentsHistory.forEach(commentInfo => {
-                commentsEltList.innerHTML += '<h4>' + commentInfo[1] + ' ' + commentInfo[2] + '</h4><p>' + commentInfo[0] + '</p>';
+            commentsHistory.forEach(commentObject => {
+                commentsEltList.innerHTML += '<h4>' + commentObject.firstName + ' ' + commentObject.lastName + '</h4><p>' + commentObject.comment + '</p>';
+                if(commentObject.canEdit) {
+                    commentsEltList.innerHTML += "<p>edit</p>";
+                }
             });
         }
     });

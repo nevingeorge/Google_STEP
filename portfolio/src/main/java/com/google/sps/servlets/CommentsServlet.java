@@ -26,6 +26,8 @@ import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken; 
+import java.lang.reflect.Type;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -73,25 +75,28 @@ public class CommentsServlet extends HttpServlet {
     int count = 0;
 
     // retrieve at most limit number of comments from the server
-    ArrayList<String[]> commentsHistory = new ArrayList<String[]>();
+    ArrayList<Comment> commentsHistory = new ArrayList<Comment>();
     for(Entity entity : results.asIterable()) {
         if(count==limit)
             break;
             
-        String[] commentInfo = new String[4];
-        commentInfo[0] = (String) entity.getProperty("comment");
+        String comment = (String) entity.getProperty("comment");
 
-        String userId = entity.getProperty("id");
+        String userId = (String) entity.getProperty("id");
         Entity userEntity = UserInfoServlet.getUserEntity(userId);
-        commentInfo[1] = (String) userEntity.getProperty("firstName");
-        commentInfo[2] = (String) userEntity.getProperty("lastName");
+        String firstName = (String) userEntity.getProperty("firstName");
+        String lastName = (String) userEntity.getProperty("lastName");
 
-        comment[3] = "false";
+        boolean canEdit = false;
         if(userId.equals(currentUserId)) {
-            comment[3] = "true";
+            canEdit = true;
         }
+        
+        Comment commentObject = new Comment(comment, firstName, lastName, canEdit);
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(commentObject));
 
-        commentsHistory.add(commentInfo);
+        commentsHistory.add(commentObject);
         count++;
     }
 
