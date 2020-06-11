@@ -63,6 +63,12 @@ public class CommentsServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
+    String currentUserId = "";
+    UserService userService = UserServiceFactory.getUserService();
+    if(userService.isUserLoggedIn()) {
+        currentUserId = userService.getCurrentUser().getUserId();
+    }
+
     int limit = getLimit(request);
     int count = 0;
 
@@ -72,12 +78,19 @@ public class CommentsServlet extends HttpServlet {
         if(count==limit)
             break;
             
-        String[] commentInfo = new String[3];
+        String[] commentInfo = new String[4];
         commentInfo[0] = (String) entity.getProperty("comment");
 
-        Entity userEntity = UserInfoServlet.getUserEntity((String) entity.getProperty("id"));
+        String userId = entity.getProperty("id");
+        Entity userEntity = UserInfoServlet.getUserEntity(userId);
         commentInfo[1] = (String) userEntity.getProperty("firstName");
         commentInfo[2] = (String) userEntity.getProperty("lastName");
+
+        comment[3] = "false";
+        if(userId.equals(currentUserId)) {
+            comment[3] = "true";
+        }
+
         commentsHistory.add(commentInfo);
         count++;
     }
