@@ -88,17 +88,27 @@ function getComments() {
 function openEditCommentForm(id) {
     var editCommentForm = document.getElementById(id);
     editCommentForm.innerHTML = '';
+     editCommentForm.innerHTML += '<form action=\"/edit-comment\" method=\"POST\">\
+                                    <textarea name=\"edited-comment\" placeholder=\"Enter your new comment here\"></textarea><br>\
+                                    <input type=\"hidden\" name=\"comment-id\" value=\"' + id + '\">\
+                                    <input type=\"submit\" class=\"button\" name=\"submit\" value=\"Submit\">\
+                                    </form>\
+                                    <br><br><a onclick=\"closeEditCommentForm(\'' + id + '\'); return false\" href=\"#\"><i>Close</i></a>';
+    /*
+    editCommentForm.innerHTML = '';
     editCommentForm.innerHTML += '<form action=\"/comment-edit\" method=\"POST\">';
-    editCommentForm.innerHTML += '<textarea name=\"comment-edit\" placeholder=\"Enter your new comment here\"></textarea><br>';
+    editCommentForm.innerHTML += '<textarea name=\"edited-comment\" placeholder=\"Enter your new comment here\"></textarea><br>';
+    editCommentForm.innerHTML += '<input type=\"hidden\" name=\"comment-id\" value=\"' + id + '\">';
     editCommentForm.innerHTML += '<input type=\"submit\" class=\"button\" name=\"submit\" value=\"Submit\">';
     editCommentForm.innerHTML += '</form>';
     editCommentForm.innerHTML += '<br><br><a onclick=\"closeEditCommentForm(\'' + id + '\'); return false\" href=\"#\"><i>Close</i></a>';
+    */
     console.log('Opened the edit comment form.');
 }
 
 function closeEditCommentForm(id) {
     var editCommentForm = document.getElementById(id);
-    editCommentForm.innerHTML = '<a onclick=\"editComment(\'' + id + '\'); return false\" href=\"#\"><i>edit</i></a>';
+    editCommentForm.innerHTML = '<a onclick=\"openEditCommentForm(\'' + id + '\'); return false\" href=\"#\"><i>edit</i></a>';
     console.log('Closed the edit comment form.');
 }
 

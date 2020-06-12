@@ -59,7 +59,7 @@ public class CommentsServlet extends HttpServlet {
             String comment = request.getParameter("comment");
             String userId = userService.getCurrentUser().getUserId();
 
-            Entity commentEntity = new Entity("comment");
+            Entity commentEntity = new Entity("comment", numComments);
             commentEntity.setProperty("commentId", numComments);
             commentEntity.setProperty("comment", comment);
             commentEntity.setProperty("timestamp", timestamp);

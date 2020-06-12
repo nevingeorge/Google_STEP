@@ -31,7 +31,17 @@ public class EditCommentServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("hi");
+        int commentId = Integer.parseInt(request.getParameter("comment-id"));
+        String editedComment = request.getParameter("edited-comment");
+
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        Query query = new Query("comment").setFilter(new Query.FilterPredicate("commentId", Query.FilterOperator.EQUAL, commentId));
+        Entity commentEntity =  datastore.prepare(query).asSingleEntity();
+
+        commentEntity.setProperty("comment", editedComment);
+        datastore.put(commentEntity);
+
+        response.sendRedirect("/forum.html");
     }
 
 }
