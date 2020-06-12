@@ -25,19 +25,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// deletes all comments data
-@WebServlet("/delete-data")
-public class DeleteServlet extends HttpServlet {
+// edits a specific comment
+@WebServlet("/edit-comment")
+public class EditCommentServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Query query = new Query("comment");
-        PreparedQuery results = datastore.prepare(query);
-
-        for(Entity entity : results.asIterable()) {
-            datastore.delete(entity.getKey());
-        }
+        System.out.println("hi");
     }
 
 }

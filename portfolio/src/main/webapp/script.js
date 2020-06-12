@@ -73,13 +73,33 @@ function getComments() {
             commentsEltList.innerHTML = '';
             commentsHistory.forEach(commentObject => {
                 commentsEltList.innerHTML += '<h4>' + commentObject.firstName + ' ' + commentObject.lastName + '</h4><p>' + commentObject.comment + '</p>';
+                commentsEltList.innerHTML += '<div id=\"' + commentObject.id + '\"></div>';
+                
                 if(commentObject.canEdit) {
-                    commentsEltList.innerHTML += "<p>edit</p>";
+                    var editLink = document.getElementById(commentObject.id);
+                    editLink.innerHTML = '<a onclick=\"openEditCommentForm(\'' + commentObject.id + '\'); return false\" href=\"#\"><i>edit</i></a>';
                 }
             });
         }
     });
     console.log('Got comments.');
+}
+
+function openEditCommentForm(id) {
+    var editCommentForm = document.getElementById(id);
+    editCommentForm.innerHTML = '';
+    editCommentForm.innerHTML += '<form action=\"/comment-edit\" method=\"POST\">';
+    editCommentForm.innerHTML += '<textarea name=\"comment-edit\" placeholder=\"Enter your new comment here\"></textarea><br>';
+    editCommentForm.innerHTML += '<input type=\"submit\" class=\"button\" name=\"submit\" value=\"Submit\">';
+    editCommentForm.innerHTML += '</form>';
+    editCommentForm.innerHTML += '<br><br><a onclick=\"closeEditCommentForm(\'' + id + '\'); return false\" href=\"#\"><i>Close</i></a>';
+    console.log('Opened the edit comment form.');
+}
+
+function closeEditCommentForm(id) {
+    var editCommentForm = document.getElementById(id);
+    editCommentForm.innerHTML = '<a onclick=\"editComment(\'' + id + '\'); return false\" href=\"#\"><i>edit</i></a>';
+    console.log('Closed the edit comment form.');
 }
 
 function drawNextProject() {

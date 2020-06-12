@@ -14,6 +14,7 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.appengine.api.datastore.DatastoreService;
@@ -38,16 +39,32 @@ public class CommentsServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         UserService userService = UserServiceFactory.getUserService();
         if(userService.isUserLoggedIn()) {
+            // get the comment id number
+            DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+            Query query = new Query("numComments");
+            Entity numCommentsEntity = datastore.prepare(query).asSingleEntity();
+            int numComments = 1;
+            if(numCommentsEntity != null) {
+                numComments = (int) ((long) numCommentsEntity.getProperty("number"));
+                numCommentsEntity.setProperty("number", ++numComments);
+                datastore.put(numCommentsEntity);
+            }
+            else {
+                Entity newNumCommentsEntity = new Entity("numComments");
+                newNumCommentsEntity.setProperty("number", numComments);
+                datastore.put(newNumCommentsEntity);
+            }
+
             long timestamp = System.currentTimeMillis();
             String comment = request.getParameter("comment");
             String userId = userService.getCurrentUser().getUserId();
 
             Entity commentEntity = new Entity("comment");
+            commentEntity.setProperty("commentId", numComments);
             commentEntity.setProperty("comment", comment);
             commentEntity.setProperty("timestamp", timestamp);
-            commentEntity.setProperty("id", userId);
+            commentEntity.setProperty("userId", userId);
 
-            DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
             datastore.put(commentEntity);
 
             response.sendRedirect("/forum.html");
@@ -77,10 +94,10 @@ public class CommentsServlet extends HttpServlet {
     for(Entity entity : results.asIterable()) {
         if(count==limit)
             break;
-            
+        
+        int commentId = (int) ((long) entity.getProperty("commentId"));
         String comment = (String) entity.getProperty("comment");
-
-        String userId = (String) entity.getProperty("id");
+        String userId = (String) entity.getProperty("userId");
         Entity userEntity = UserInfoServlet.getUserEntity(userId);
         String firstName = (String) userEntity.getProperty("firstName");
         String lastName = (String) userEntity.getProperty("lastName");
@@ -90,10 +107,7 @@ public class CommentsServlet extends HttpServlet {
             canEdit = true;
         }
         
-        Comment commentObject = new Comment(comment, firstName, lastName, canEdit);
-        Gson gson = new Gson();
-        System.out.println(gson.toJson(commentObject));
-
+        Comment commentObject = new Comment(commentId, comment, firstName, lastName, canEdit);
         commentsHistory.add(commentObject);
         count++;
     }

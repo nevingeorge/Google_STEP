@@ -14,14 +14,18 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.Key;
+
 public class Comment {
 
+    public int id;
     public String comment;
     public String firstName;
     public String lastName;
     public boolean canEdit;
 
-    public Comment(String comment, String firstName, String lastName, boolean canEdit) {
+    public Comment(int id, String comment, String firstName, String lastName, boolean canEdit) {
+        this.id = id;
         this.comment = comment;
         this.firstName = firstName;
         this.lastName = lastName;
