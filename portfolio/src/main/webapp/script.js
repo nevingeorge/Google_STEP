@@ -89,20 +89,15 @@ function openEditCommentForm(id) {
     var editCommentForm = document.getElementById(id);
     editCommentForm.innerHTML = '';
      editCommentForm.innerHTML += '<form action=\"/edit-comment\" method=\"POST\">\
-                                    <textarea name=\"edited-comment\" placeholder=\"Enter your new comment here\"></textarea><br>\
-                                    <input type=\"hidden\" name=\"comment-id\" value=\"' + id + '\">\
-                                    <input type=\"submit\" class=\"button\" name=\"submit\" value=\"Submit\">\
-                                    </form>\
-                                    <br><br><a onclick=\"closeEditCommentForm(\'' + id + '\'); return false\" href=\"#\"><i>Close</i></a>';
-    /*
-    editCommentForm.innerHTML = '';
-    editCommentForm.innerHTML += '<form action=\"/comment-edit\" method=\"POST\">';
-    editCommentForm.innerHTML += '<textarea name=\"edited-comment\" placeholder=\"Enter your new comment here\"></textarea><br>';
-    editCommentForm.innerHTML += '<input type=\"hidden\" name=\"comment-id\" value=\"' + id + '\">';
-    editCommentForm.innerHTML += '<input type=\"submit\" class=\"button\" name=\"submit\" value=\"Submit\">';
-    editCommentForm.innerHTML += '</form>';
-    editCommentForm.innerHTML += '<br><br><a onclick=\"closeEditCommentForm(\'' + id + '\'); return false\" href=\"#\"><i>Close</i></a>';
-    */
+                                        <textarea name=\"edited-comment\" placeholder=\"Enter your new comment here\"></textarea><br>\
+                                        <input type=\"hidden\" name=\"comment-id\" value=\"' + id + '\">\
+                                        <input type=\"submit\" class=\"button\" name=\"submit\" value=\"Submit\">\
+                                   </form>\
+                                   <form action=\"/delete-comment\" method=\"POST\">\
+                                        <input type=\"hidden\" name=\"comment-id\" value=\"' + id + '\">\
+                                        <input type=\"submit\" class=\"button\" name=\"submit\" value=\"Delete\">\
+                                   </form>\
+                                   <br><br><a onclick=\"closeEditCommentForm(\'' + id + '\'); return false\" href=\"#\"><i>Close</i></a>';
     console.log('Opened the edit comment form.');
 }
 
