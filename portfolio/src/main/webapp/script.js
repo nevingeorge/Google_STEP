@@ -15,6 +15,9 @@
 google.charts.load("current", {'packages':["timeline", "corechart"]});
 
 function getLoginStatus() {
+    // hide the profile by default
+    hideProfile();
+
     fetch('/login-status').then(response => response.json()).then(loginStatus => {
         const loginMessageContainer = document.getElementById("login-message-container");
         if(loginStatus[0]) {
@@ -24,8 +27,7 @@ function getLoginStatus() {
         }
         else {
             console.log('User is not logged in.');
-            hideProfile();
-            loginMessageContainer.innerHTML = '<br><p>Login <a href=\"' + loginStatus[1] + '\">here</a> to post comments and vote on what should be my next project!</p>';
+            loginMessageContainer.innerHTML = '<p>Login <a href=\"' + loginStatus[1] + '\">here</a> to post comments and vote on what should be my next project!</p>';
         }
     });
 }
@@ -62,19 +64,47 @@ function getComments() {
     var limit = document.getElementById("limit").value;
 
     fetch('/comments?limit=' + limit).then(response => response.json()).then(commentsHistory => {
-        const commentsEltList = document.getElementById('comments-container');
+        const commentsEltList = document.getElementById('comments-content-container');
 
         if(Object.keys(commentsHistory).length == 0) {
             commentsEltList.innerHTML = 'Be the first to leave a comment!';
         }
         else {
             commentsEltList.innerHTML = '';
-            commentsHistory.forEach(commentInfo => {
-                commentsEltList.appendChild(createListElement(commentInfo[1] + " " + commentInfo[2] + ": " + commentInfo[0]));
+            commentsHistory.forEach(commentObject => {
+                commentsEltList.innerHTML += '<h4>' + commentObject.firstName + ' ' + commentObject.lastName + '</h4><p>' + commentObject.comment + '</p>';
+                commentsEltList.innerHTML += '<div id=\"' + commentObject.id + '\"></div>';
+                
+                if(commentObject.canEdit) {
+                    var editLink = document.getElementById(commentObject.id);
+                    editLink.innerHTML = '<a onclick=\"openEditCommentForm(\'' + commentObject.id + '\'); return false\" href=\"#\"><i>edit</i></a>';
+                }
             });
         }
     });
     console.log('Got comments.');
+}
+
+function openEditCommentForm(id) {
+    var editCommentForm = document.getElementById(id);
+    editCommentForm.innerHTML = '';
+    editCommentForm.innerHTML += '<form action=\"/edit-comment\" method=\"POST\">\
+                                    <textarea name=\"edited-comment\" placeholder=\"Enter your new comment here\"></textarea><br>\
+                                    <input type=\"hidden\" name=\"comment-id\" value=\"' + id + '\">\
+                                    <input type=\"submit\" class=\"button\" name=\"submit\" value=\"Submit\">\
+                                  </form>\
+                                  <form action=\"/delete-comment\" method=\"POST\">\
+                                    <input type=\"hidden\" name=\"comment-id\" value=\"' + id + '\">\
+                                    <input type=\"submit\" class=\"button\" name=\"submit\" value=\"Delete\">\
+                                  </form>\
+                                  <br><br><a onclick=\"closeEditCommentForm(\'' + id + '\'); return false\" href=\"#\"><i>Close</i></a>';
+    console.log('Opened the edit comment form.');
+}
+
+function closeEditCommentForm(id) {
+    var editCommentForm = document.getElementById(id);
+    editCommentForm.innerHTML = '<a onclick=\"openEditCommentForm(\'' + id + '\'); return false\" href=\"#\"><i>edit</i></a>';
+    console.log('Closed the edit comment form.');
 }
 
 function drawNextProject() {
@@ -92,7 +122,7 @@ function drawNextProject() {
             legend: {position: "none"},
         };
 
-        const chart = new google.visualization.ColumnChart(document.getElementById('next-project-container'));
+        const chart = new google.visualization.ColumnChart(document.getElementById('chart-container'));
         chart.draw(data, options);
     });
 
@@ -114,10 +144,6 @@ function getUserInfo(userInfo) {
     const userInfoContainer = document.getElementById('user-info-container');
     userInfoContainer.innerHTML = '';
 
-    if(!userInfo.canVote) {
-        userInfoContainer.innerHTML += '<h4>Thanks for voting!</h4>';
-    }
-    userInfoContainer.innerHTML += '<br>'
     if(userInfo.firstName.localeCompare("") != 0) {
         userInfoContainer.innerHTML += '<h2>Hi ' + userInfo.firstName + '!</h2>';
     }
@@ -125,20 +151,6 @@ function getUserInfo(userInfo) {
         userInfoContainer.innerHTML += '<h2>Hi ' + userInfo.lastName + '!</h2>';
     }
     console.log('Got user info.');
-}
-
-// creates an <li> element containing text
-function createListElement(text) {
-    const liElt = document.createElement('li');
-    liElt.innerText = text;
-    return liElt;
-}
-
-async function deleteComments() {
-    await fetch("/delete-data", {method: 'POST'});
-    console.log('Deleted comments.');
-
-    getComments();
 }
 
 function drawTimeline() {

@@ -7,7 +7,7 @@
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="script.js"></script>
   </head>
-  <body onload="getLoginStatus(); getComments(); drawNextProject();">
+  <body onload="getComments(); drawNextProject(); getLoginStatus();">
     <ul class="navbar-ul">
         <li class="navbar-li"><a class="active navbar-a" href="/index.html">Home</a></li>
         <li class="navbar-li"><a class="navbar-a" href="/about.html">About</a></li>
@@ -19,35 +19,34 @@
     </ul>
     <div class="paragraph-margin">
         <h1 class="center-text">Forum</h1>
-        <h2>Comments</h2>
-        <div id="comments-container"></div>
-        <br>
-        <div id="comments-form-container">
-            <form action="/comments" method="POST">
-                <textarea name="comment" placeholder="Enter your comment here"></textarea>
-                <br>
-                <input type="submit" class="button" name="submit" value="Submit">
-            </form>
-            <h4>Max number of comments to display (0-10): </h4>
-            <input type="number" value="5" id="limit" min="0" max="10" onchange="getComments()">
-            <br>
-            <button onclick="deleteComments()">Delete Comments</button>
-            <br><br>
+        <div id="user-info-container" class="hide-container"></div>
+        <div id="login-message-container"></div><br>
+        <div id="next-project-container">
+            <h2>Vote on my next project!</h2>
+            <div id="chart-container" class="chart-container"></div>
+            <div id="vote-container" class="hide-container">
+                <form action="/next-project" method="POST">
+                    <select name="project">
+                        <option value="Website">Website</option>
+                        <option value="iOS App">iOS App</option>
+                        <option value="Machine Learning">Machine Learning</option>
+                    </select>
+                    <input type="submit" class="button" name="submit" value="Submit">
+                </form>
+            </div><br><br>
         </div>
-        <h2>Vote on my next project!</h2>
-        <div id="next-project-container" class="next-project-container"></div>
-        <div id="vote-container">
-            <form action="/next-project" method="POST">
-                <select name="project">
-                    <option value="Website">Website</option>
-                    <option value="iOS App">iOS App</option>
-                    <option value="Machine Learning">Machine Learning</option>
-                </select>
-                <input type="submit" class="button" name="submit" value="Submit">
-            </form>
+        <div id="comments-container">
+            <h2>Comments</h2>
+            <div id="comments-form-container" class="hide-container">
+                <form action="/comments" method="POST">
+                    <textarea name="comment" placeholder="Enter your comment here"></textarea><br>
+                    <input type="submit" class="button" name="submit" value="Submit">
+                </form>
+                <h4>Max number of comments to display (0-10): </h4>
+                <input type="number" value="5" id="limit" min="0" max="10" onchange="getComments()"><br>
+            </div>
+            <div id="comments-content-container" class="comments-content-container"></div>
         </div>
-        <div id="user-info-container"></div>
-        <div id="login-message-container"></div>
     </div>
   </body>
 </html>
