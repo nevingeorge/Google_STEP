@@ -25,19 +25,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-// deletes all comments data
-@WebServlet("/delete-data")
-public class DeleteServlet extends HttpServlet {
+// deletes a comment
+@WebServlet("/delete-comment")
+public class DeleteCommentServlet extends HttpServlet {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int commentId = Integer.parseInt(request.getParameter("comment-id"));
+
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-        Query query = new Query("comment");
-        PreparedQuery results = datastore.prepare(query);
+        Query query = new Query("comment").setFilter(new Query.FilterPredicate("commentId", Query.FilterOperator.EQUAL, commentId));
+        Entity commentEntity =  datastore.prepare(query).asSingleEntity();
 
-        for(Entity entity : results.asIterable()) {
-            datastore.delete(entity.getKey());
-        }
+        datastore.delete(commentEntity.getKey());
+
+        response.sendRedirect("/forum.html");
     }
-
 }
