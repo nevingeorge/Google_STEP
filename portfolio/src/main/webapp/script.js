@@ -67,7 +67,7 @@ function getComments() {
         const commentsEltList = document.getElementById('comments-content-container');
 
         if(Object.keys(commentsHistory).length == 0) {
-            commentsEltList.innerHTML = 'Be the first to leave a comment!';
+            commentsEltList.innerHTML = '<br>Be the first to leave a comment!';
         }
         else {
             commentsEltList.innerHTML = '';
@@ -91,7 +91,7 @@ function openEditCommentForm(id) {
     editCommentForm.innerHTML += '<form action=\"/edit-comment\" method=\"POST\">\
                                     <textarea name=\"edited-comment\" placeholder=\"Enter your new comment here\"></textarea><br>\
                                     <input type=\"hidden\" name=\"comment-id\" value=\"' + id + '\">\
-                                    <input type=\"submit\" class=\"button\" name=\"submit\" value=\"Submit\">\
+                                    <input type=\"submit\" class=\"button\" name=\"submit\" value=\"Edit\">\
                                   </form>\
                                   <form action=\"/delete-comment\" method=\"POST\">\
                                     <input type=\"hidden\" name=\"comment-id\" value=\"' + id + '\">\
