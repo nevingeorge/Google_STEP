@@ -23,13 +23,14 @@ div.contact {
     margin-top: 4%;
     margin-left: auto;
     margin-right: auto;
-    width: 700px;
+    margin-bottom: 4%;
+    width: 690px;
 }
 
 div.logos {
     margin-left: auto;
     margin-right: auto;
-    width: 170px;
+    width: 250px;
 }
 
 .logo-left {
@@ -45,7 +46,7 @@ div.logos {
     border: 0px;
     margin: 0px;
     padding: 4px;
-    clear: both;
+    float: right;
     width: 60px;
     height: 60px;
 }
