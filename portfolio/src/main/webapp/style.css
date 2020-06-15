@@ -13,8 +13,12 @@ div.parallax {
     min-height: 100vh;
 }
 
+div.about {
+    margin: 4% 8% 4% 8%; 
+}
+
 body {
-  background-color: white;
+  background-color: whitesmoke;
   background-repeat: no-repeat;
   background-attachment: fixed; 
   background-size: cover;
@@ -71,7 +75,7 @@ body {
 .header-text h2 {
     margin: 0;
     text-align: center;
-    font-size:50px;
+    font-size: 50px;
     color: black;
 }
 
@@ -82,6 +86,7 @@ img {
 
 div.paragraph-margin {
     margin: 30pt;
+    font-size: 20px;
 }
 
 div.paragraph-wrap {
