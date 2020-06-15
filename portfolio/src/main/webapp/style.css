@@ -14,11 +14,44 @@ div.parallax {
 }
 
 div.about {
-    margin: 4% 8% 4% 8%; 
+    margin: 0;
+    padding: 4% 8% 4% 8%; 
+    background-color: whitesmoke;
+}
+
+div.contact {
+    margin-top: 4%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 700px;
+}
+
+div.logos {
+    margin-left: auto;
+    margin-right: auto;
+    width: 170px;
+}
+
+.logo-left {
+    border: 0px;
+    margin: 0px;
+    padding: 4px;
+    float: left;
+    width: 60px;
+    height: 60px;
+}
+
+.logo-right {
+    border: 0px;
+    margin: 0px;
+    padding: 4px;
+    clear: both;
+    width: 60px;
+    height: 60px;
 }
 
 body {
-  background-color: whitesmoke;
+  background-image: url('/images/graybackground.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed; 
   background-size: cover;
@@ -122,24 +155,6 @@ textarea {
 
 textarea::placeholder {
   font-family: Verdana, Helvetica, sans-serif;
-}
-
-.logo-left {
-    border:0px;
-    margin:0px;
-    padding:4px;
-    float:left;
-    width:30px;
-    height:30px;
-}
-
-.logo-right {
-    border:0px;
-    margin:0px;
-    padding:4px;
-    clear:both;
-    width:30px;
-    height:30px;
 }
 
 div.name-form {
