@@ -8,15 +8,42 @@
   margin-top: 20px;
 }
 
-body.home {
-    background-image: url(/images/computer.png);
-    background-repeat: no-repeat;
-    background-attachment: fixed;  
-    background-size: cover;
+div.parallax {
+    background: transparent;
+    min-height: 100vh;
+}
+
+div.about {
+    margin: 0;
+    padding: 3% 4% 3% 4%; 
+    background-color: whitesmoke;
+}
+
+div.contact {
+    margin-top: 4%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 690px;
+}
+
+div.logos {
+    text-align: center;
+}
+
+img.logo {
+    display: inline-block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 60px; 
+    padding: 4px;
+}
+
+a.hide-decoration {
+    text-decoration: none;
 }
 
 body {
-  background-image: url(/images/graybackground.jpg);
+  background-image: url('/images/graybackground.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed; 
   background-size: cover;
@@ -63,7 +90,8 @@ body {
 }
 
 .header-text h1 {
-    margin: 9% 0 0 0;
+    margin: 0;
+    padding: 15% 0px 0px 0px;
     text-align: center;
     font-size:130px;
     color: black;
@@ -72,7 +100,7 @@ body {
 .header-text h2 {
     margin: 0;
     text-align: center;
-    font-size:50px;
+    font-size: 50px;
     color: black;
 }
 
@@ -83,6 +111,7 @@ img {
 
 div.paragraph-margin {
     margin: 30pt;
+    font-size: 18px;
 }
 
 div.paragraph-wrap {
@@ -118,24 +147,6 @@ textarea {
 
 textarea::placeholder {
   font-family: Verdana, Helvetica, sans-serif;
-}
-
-.logo-left {
-    border:0px;
-    margin:0px;
-    padding:4px;
-    float:left;
-    width:30px;
-    height:30px;
-}
-
-.logo-right {
-    border:0px;
-    margin:0px;
-    padding:4px;
-    clear:both;
-    width:30px;
-    height:30px;
 }
 
 div.name-form {
