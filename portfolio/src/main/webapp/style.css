@@ -23,32 +23,23 @@ div.contact {
     margin-top: 4%;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 4%;
     width: 690px;
 }
 
 div.logos {
+    text-align: center;
+}
+
+img.logo {
+    display: inline-block;
     margin-left: auto;
     margin-right: auto;
-    width: 250px;
+    height: 60px; 
+    padding: 4px;
 }
 
-.logo-left {
-    border: 0px;
-    margin: 0px;
-    padding: 4px;
-    float: left;
-    width: 60px;
-    height: 60px;
-}
-
-.logo-right {
-    border: 0px;
-    margin: 0px;
-    padding: 4px;
-    float: right;
-    width: 60px;
-    height: 60px;
+a.hide-decoration {
+    text-decoration: none;
 }
 
 body {
